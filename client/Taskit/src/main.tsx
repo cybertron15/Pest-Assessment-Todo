@@ -5,9 +5,9 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import "./index.css";
-import Todo from "./Todo";
-import Error from "./ErrorElement";
-import Login from "./Login";
+import Todo from "./components/TodoList";
+import Error from "./components/ErrorElement";
+import Login from "./routes/Login";
 
 const router = createBrowserRouter([
   {
