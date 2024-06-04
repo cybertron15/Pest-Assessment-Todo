@@ -9,8 +9,8 @@ export default function ErrorPage() {
 	const error = useRouteError() as RouterError;
 	return (
 		<div id="error-page" className="flex flex-col items-center mt-40">
-			<div className="text-6xl flex gap-4 text-red-500">
-				Taskit <ShieldAlert size={60} />
+			<div className="text-6xl flex gap-2 text-green-500">
+				Taskit <ShieldAlert size={60} color="red"/>
 			</div>
 			<div className="mt-2">
 				<h2 className="text-3xl">Ohh no!</h2>
