@@ -5,14 +5,13 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import "./index.css";
-import Todo from "./components/TodoList";
+import Todo from "./routes/Todo";
 import Error from "./components/ErrorElement";
 import Login from "./routes/Login";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Todo />,
     errorElement: <Error />,
     children: [
       {
