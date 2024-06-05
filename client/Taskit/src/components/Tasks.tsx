@@ -23,25 +23,27 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
-import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 
 type Props = {
     id: string;
     task: string;
     time: string;
     status: string;
+    onStatusChange: (id: string, newStatus: string) => void
 };
 function parseDate(dateString: string) {
     // Replace 'at' with a comma to create a format that can be parsed by the Date constructor
     const dateToParse = dateString.replace(' at', ',');
     return new Date(dateToParse);
-  }
+}
 
 function Tasks({
     id,
     task,
     time,
-    status
+    status,
+    onStatusChange
 }: Props) {
     type Checked = DropdownMenuCheckboxItemProps["checked"]
     const [Todo, setTodo] = useState<Checked>(false)
@@ -60,15 +62,12 @@ function Tasks({
                 setInProgress(true)
                 setDone(false)
                 break;
-
             case "Done":
                 setTodo(false)
                 setInProgress(false)
                 setDone(true)
                 break
         }
-
-
     }, [Taskstatus])
 
     return (
@@ -90,25 +89,25 @@ function Tasks({
                                 </DialogTrigger>
                                 <DialogContent onClick={(event) => {
                                     event.stopPropagation()
-                                }} className="bg-green-700 border-none">
+                                }} className=" border-none">
                                     <DialogHeader>
-                                        <DialogTitle className="text-white text-xl">Edit Task</DialogTitle>
+                                        <DialogTitle className="text-green-700 text-xl">Edit Task</DialogTitle>
                                     </DialogHeader>
 
                                     <form className="flex flex-col gap-2 w-full">
-                                        <input type="text" placeholder="Task" className="bg-none rounded-lg text-lg px-2 py-1 text-gray-500" required />
-                                        <Textarea placeholder="Description" className="bg-none rounded-lg text-lg px-2 py-1 text-gray-500 bg-white" />
-                                        <input type="datetime-local" placeholder="Description" className="bg-none rounded-lg text-lg px-2 py-1 text-gray-500" required />
+                                        <Input placeholder="Task" className="text-lg border-2 " required />
+                                        <Textarea placeholder="Description" className="bg-none rounded-lg text-lg px-2 py-1 text-gray-500 bg-white  border-2" />
+                                        <input type="datetime-local" placeholder="Description" className="border-2 rounded-lg text-lg px-2 py-1" required />
 
                                         <DialogFooter >
                                             <input type="button" value="Delete" className="bg-red-500 rounded-lg text-lg px-2 py-1 text-white cursor-pointer w-20" />
-                                            <input type="submit" value="Edit" className="bg-green-600 rounded-lg text-lg px-2 py-1 text-white cursor-pointer w-20" />
+                                            <input type="submit" value="Edit" className="bg-green-700 rounded-lg text-lg px-2 py-1 text-white cursor-pointer w-20" />
                                         </DialogFooter>
                                     </form>
                                 </DialogContent>
                             </Dialog>
                             {
-                               ( parseDate(time) < new Date()) && !Done && <div className="text-red-500 font-mono mt-1">due!!! </div>
+                                (parseDate(time) < new Date()) && !Done && <div className="text-red-500 font-mono mt-1">due!!! </div>
                             }
                         </div>
                         <TooltipContent className="bg-slate-600">{task}</TooltipContent>
@@ -126,14 +125,17 @@ function Tasks({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuCheckboxItem checked={Todo} onClick={(event) => {
+                        onStatusChange(id,"Todo")
                         setTaskstatus("Todo")
                         event.stopPropagation() // stopping event propagation to prevent accordion trigger
                     }}>Todo</DropdownMenuCheckboxItem>
                     <DropdownMenuCheckboxItem checked={InProgress} onClick={(event) => {
+                        onStatusChange(id,"In Progress")
                         setTaskstatus("In Progress")
                         event.stopPropagation()
                     }}>In Progress</DropdownMenuCheckboxItem>
                     <DropdownMenuCheckboxItem checked={Done} onClick={(event) => {
+                        onStatusChange(id,"Done")
                         setTaskstatus("Done")
                         event.stopPropagation()
                     }}>Done</DropdownMenuCheckboxItem>
