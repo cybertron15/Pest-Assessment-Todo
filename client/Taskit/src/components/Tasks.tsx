@@ -26,12 +26,19 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "./ui/button";
 
 type Props = {
+    id: string;
     task: string;
     time: string;
     status: string;
 };
+function parseDate(dateString: string) {
+    // Replace 'at' with a comma to create a format that can be parsed by the Date constructor
+    const dateToParse = dateString.replace(' at', ',');
+    return new Date(dateToParse);
+  }
 
 function Tasks({
+    id,
     task,
     time,
     status
@@ -40,7 +47,7 @@ function Tasks({
     const [Todo, setTodo] = useState<Checked>(false)
     const [InProgress, setInProgress] = useState<Checked>(false)
     const [Done, setDone] = useState<Checked>(false)
-    const [Taskstatus, setTaskstatus] = useState("In Progress")
+    const [Taskstatus, setTaskstatus] = useState(status)
     useEffect(() => {
         switch (Taskstatus) {
             case "Todo":
@@ -100,9 +107,9 @@ function Tasks({
                                     </form>
                                 </DialogContent>
                             </Dialog>
-                            <div className="text-red-500 font-mono mt-1">
-                                due!!!
-                            </div>
+                            {
+                               ( parseDate(time) < new Date()) && !Done && <div className="text-red-500 font-mono mt-1">due!!! </div>
+                            }
                         </div>
                         <TooltipContent className="bg-slate-600">{task}</TooltipContent>
                     </Tooltip>
