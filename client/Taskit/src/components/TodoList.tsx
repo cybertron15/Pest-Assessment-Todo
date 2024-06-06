@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/drawer"
 import { Button } from "./ui/button"
 import Setting from "./Setting"
+import loadInspirationalQuote from "@/utils/quoteLoadingUtil"
 
 
 type Task = {
@@ -53,6 +54,7 @@ function TodoList() {
 	const [dateDesc, setdateDesc] = useState(false)
 
 	const [search, setSearch] = useState<string | null>(null)
+	const [quote, setquote] = useState({quote:"", author:""})
 
 	const [tasks, settasks] = useState<Task[]>([
 		{
@@ -273,7 +275,8 @@ function TodoList() {
 		})
 		settasks(updatedTasks)
 	}
-
+	
+	
 	return (
 		<div className="h-full w-full bg-white lg:rounded-lg flex shadow-xl">
 			<div className="lg:flex flex-col basis-1/2 bg-green-700 lg:rounded-s-lg px-4 py-2 h-full hidden">
@@ -283,8 +286,11 @@ function TodoList() {
 					</div>
 					<Setting />
 				</div>
-				<div className="flex flex-col h-full pt-[30%] items-center">
-					<div>
+				<div className="flex flex-col h-full items-center">
+					<div className="text-white text-lg mt-[10%]">
+						Hey Palash! You have {tasks.filter(task => task.status !== "Done").length} tasks to conquer.
+					</div>
+					<div className="mt-[15%]">
 						<h2 className="text-white text-2xl mb-2">
 							Create Tasks
 						</h2>
@@ -295,15 +301,22 @@ function TodoList() {
 							<input type="submit" value="Add Task" className="bg-green-600 rounded-lg text-lg px-2 py-1 text-white cursor-pointer" required />
 						</form>
 					</div>
+					{
+
+					}
 				</div>
 			</div>
-			<div className="flex-1 ">
+			<div className="relative flex-1 ">
+				<div className="fixed lg:hidden bottom-1 right-2">
+
+				</div>
 				<div className="px-4 py-2 h-full w-full ">
 					<div className="flex w-full gap-8 justify-between items-center">
 						<div className="text-4xl text-green-600">
 							<div className="hidden lg:block">Tasks</div>
 							<div className="lg:hidden flex gap-3 items-center">
 								<div className="text-black">Taskit</div>
+
 								<Drawer>
 									<DrawerTrigger className="bg-green-600 rounded-md mt-1 shadow-xl p-1"><Plus className="text-white" size={22} /></DrawerTrigger>
 									<DrawerContent className="bg-green-700 flex flex-col items-center border-none">
@@ -327,6 +340,9 @@ function TodoList() {
 										</form>
 									</DrawerContent>
 								</Drawer>
+								<div className="mt-[2px]">
+									<Setting />
+								</div>
 							</div>
 						</div>
 						<div className="flex gap-2 border-2 rounded-lg pe-2">
@@ -386,7 +402,7 @@ function TodoList() {
 					<hr className="border-t-2 my-2" />
 					<ScrollArea className="h-[90%] w-full md:px-1">
 						{
-							preparedTasks!==null ?
+							preparedTasks !== null ?
 								preparedTasks.length === 0 ?
 									<div className="pt-20 text-lg text-center text-slate-500">
 										No tasks
@@ -408,11 +424,11 @@ function TodoList() {
 											</AccordionItem>
 										</Accordion>
 									}))
-									:
-									<div>
-										spinner
-									</div>
-									
+								:
+								<div>
+									spinner
+								</div>
+
 						}
 					</ScrollArea>
 

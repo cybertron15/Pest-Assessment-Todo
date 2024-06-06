@@ -47,7 +47,7 @@ function Edit({task,desciption,time}:Props) {
 
                     <form className="flex flex-col gap-2 w-full mb-2">
                         <input placeholder="Task" defaultValue={task} className="bg-none rounded-lg text-lg px-2 py-1 text-gray-500 bg-white border-2" required />
-                        <textarea placeholder="Description" defaultValue={desciption} className="bg-none rounded-lg text-lg px-2 py-1 text-gray-500 bg-white border-2" />
+                        <textarea placeholder="Description" defaultValue={desciption} className="bg-none rounded-lg text-lg px-2 py-1 text-gray-500 bg-white border-2" required/>
                         <input type="datetime-local" defaultValue={formatDate(time)} placeholder="Description" className="border-2 rounded-lg text-lg px-2 py-1 text-gray-500" required />
 
                         <DialogFooter >
@@ -73,7 +73,7 @@ function Edit({task,desciption,time}:Props) {
                     </DrawerHeader>
                     <form className="flex flex-col gap-2 w-72">
                         <input placeholder="Task" defaultValue={task} className="bg-none rounded-lg text-lg px-2 py-1 text-gray-500 bg-white border-2" required />
-                        <textarea placeholder="Description" defaultValue={desciption} className="bg-none rounded-lg text-lg px-2 py-1 text-gray-500 bg-white border-2" />
+                        <textarea placeholder="Description" defaultValue={desciption} className="bg-none rounded-lg text-lg px-2 py-1 text-gray-500 bg-white border-2" required/>
                         <input type="datetime-local" defaultValue={formatDate(time)} placeholder="Description" className="border-2 rounded-lg text-lg px-2 py-1 text-gray-500 w-full" required />
                         <DrawerFooter className="px-0">
                             <input type="submit" value="Edit Task" className="bg-green-600 rounded-lg text-lg py-1 text-white cursor-pointer" required />
