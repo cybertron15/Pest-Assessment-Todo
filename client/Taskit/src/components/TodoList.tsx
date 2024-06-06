@@ -9,6 +9,7 @@ import {
 	DropdownMenuCheckboxItem,
 	DropdownMenuShortcut
 } from "@/components/ui/dropdown-menu"
+
 import { useEffect, useState } from "react"
 import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
 import { Input } from "./ui/input"
@@ -152,11 +153,9 @@ function TodoList() {
 			description: 'Prepare and present the project progress to the client.'
 		},
 	])
-	const [preparedTasks, setpreparedTasks] = useState(tasks)
+	const [preparedTasks, setpreparedTasks] = useState<Task[] | null>(null)
 	useEffect(() => {
 		function sortTasks() {
-			console.log("sort");
-
 			// setting sort states on dropdown
 			switch (sortCriteria) {
 				case "alphabetic-asc":
@@ -208,8 +207,6 @@ function TodoList() {
 	useEffect(() => {
 		// handles tasks filtering
 		function filterTasks() {
-			// console.log("filter");
-
 			// setting filter states on dropdown
 			switch (filter) {
 				case "Todo":
@@ -252,7 +249,6 @@ function TodoList() {
 
 		// handles search
 		function searchTasks() {
-			// console.log("search");
 
 			const preparedTasks = filterTasks()
 			if (search !== null) {
@@ -321,12 +317,12 @@ function TodoList() {
 											<input type="text" placeholder="Task" className="bg-none rounded-lg text-lg px-2 py-1 text-gray-400" required />
 											<input type="text" placeholder="Description" className="bg-none rounded-lg text-lg px-2 py-1 text-gray-400" required />
 											<input type="datetime-local" className="w-full bg-none rounded-lg text-lg px-2 py-1 text-gray-400" required />
-										<DrawerFooter className="px-0">
-											<input type="submit" value="Add Task" className="bg-green-600 rounded-lg text-lg py-1 text-white cursor-pointer" required />
-											<DrawerClose>
-												<Button className="bg-green-700 w-full border-2 border-green-600">Cancel</Button>
-											</DrawerClose>
-										</DrawerFooter>
+											<DrawerFooter className="px-0">
+												<input type="submit" value="Add Task" className="bg-green-600 rounded-lg text-lg py-1 text-white cursor-pointer" required />
+												<DrawerClose>
+													<Button className="bg-green-700 w-full border-2 border-green-600">Cancel</Button>
+												</DrawerClose>
+											</DrawerFooter>
 										</form>
 									</DrawerContent>
 								</Drawer>
@@ -390,23 +386,33 @@ function TodoList() {
 					<hr className="border-t-2 my-2" />
 					<ScrollArea className="h-[90%] w-full md:px-1">
 						{
-							preparedTasks.map((task) => {
-								return <Accordion type="single" key={task.id} collapsible className="border-b-2 px-2 mb-2">
-									<AccordionItem value={"test"}>
-										<AccordionTrigger>
-											<Tasks task={task.task} time={task.time} status={task.status} id={task.id} desciption={task.description} onStatusChange={handleTaskStatusChange} />
-										</AccordionTrigger>
-										<AccordionContent className="px-1">
-											<div className="font-medium">
-												Description
-											</div>
-											<div className="text-slate-600">
-												{task.description}
-											</div>
-										</AccordionContent>
-									</AccordionItem>
-								</Accordion>
-							})
+							preparedTasks!==null ?
+								preparedTasks.length === 0 ?
+									<div className="pt-20 text-lg text-center text-slate-500">
+										No tasks
+									</div> :
+									(preparedTasks.map((task) => {
+										return <Accordion type="single" key={task.id} collapsible className="border-b-2 px-2 mb-2">
+											<AccordionItem value={"test"}>
+												<AccordionTrigger>
+													<Tasks task={task.task} time={task.time} status={task.status} id={task.id} desciption={task.description} onStatusChange={handleTaskStatusChange} />
+												</AccordionTrigger>
+												<AccordionContent className="px-1">
+													<div className="font-medium">
+														Description
+													</div>
+													<div className="text-slate-600">
+														{task.description}
+													</div>
+												</AccordionContent>
+											</AccordionItem>
+										</Accordion>
+									}))
+									:
+									<div>
+										spinner
+									</div>
+									
 						}
 					</ScrollArea>
 
