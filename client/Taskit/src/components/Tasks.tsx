@@ -78,7 +78,7 @@ function Tasks({
                 <TooltipProvider >
                     <Tooltip>
                         <div className="flex items-center gap-1.5">
-                            <TooltipTrigger className="text-xl font-Inter truncate ... max-w-40 text-start">
+                            <TooltipTrigger className="text-xl font-Inter truncate ... max-w-48 text-start">
                                 {task}
                             </TooltipTrigger>
                             <Dialog>
