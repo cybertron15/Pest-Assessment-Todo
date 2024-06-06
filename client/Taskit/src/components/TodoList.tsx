@@ -1,4 +1,4 @@
-import { Filter, Power } from "lucide-react"
+import { ArrowDownUp, ArrowUpAZ, ArrowUpWideNarrow, Filter, Power } from "lucide-react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import Tasks from "./Tasks"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion"
@@ -6,17 +6,19 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuTrigger,
-	DropdownMenuCheckboxItem
+	DropdownMenuCheckboxItem,
+	DropdownMenuShortcut
 } from "@/components/ui/dropdown-menu"
 import { useEffect, useState } from "react"
 import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
+import { Input } from "./ui/input"
 type Task = {
 	id: string,
 	task: string,
 	time: string,
 	status: string,
 	description: string
-  
+
 }
 function TodoList() {
 	type Checked = DropdownMenuCheckboxItemProps["checked"]
@@ -26,82 +28,86 @@ function TodoList() {
 	const [filterDone, setfilterDone] = useState<Checked>(false)
 	const [tasks, settasks] = useState<Task[]>([
 		{
-		  id: "1",
-		  task: 'Submit Project Report',
-		  time: 'Mon, Jun 10 2024 at 9:00 AM',
-		  status: 'In Progress',
-		  description: 'Complete the final project report and submit it to the project manager.'
+			id: "1",
+			task: 'Submit Project Report',
+			time: 'Mon, Jun 10 2024 at 9:00 AM',
+			status: 'In Progress',
+			description: 'Complete the final project report and submit it to the project manager.'
 		},
 		{
-		  id: "2",
-		  task: 'Team Meeting',
-		  time: 'Tue, Jun 11 2024 at 11:00 AM',
-		  status: 'Done',
-		  description: 'Discuss project milestones and next steps with the team.'
+			id: "2",
+			task: 'Team Meeting',
+			time: 'Tue, Jun 11 2024 at 11:00 AM',
+			status: 'Done',
+			description: 'Discuss project milestones and next steps with the team.'
 		},
 		{
-		  id: "3",
-		  task: 'Code Review',
-		  time: 'Wed, Jun 12 2024 at 2:00 PM',
-		  status: 'Todo',
-		  description: 'Review the latest code commits and provide feedback to the developers.'
+			id: "3",
+			task: 'Code Review',
+			time: 'Wed, Jun 12 2024 at 2:00 PM',
+			status: 'Todo',
+			description: 'Review the latest code commits and provide feedback to the developers.'
 		},
 		{
-		  id: "4",
-		  task: 'Client Presentation',
-		  time: 'Thu, Jun 13 2024 at 4:00 PM',
-		  status: 'In Progress',
-		  description: 'Prepare and present the project progress to the client.'
+			id: "4",
+			task: 'Client Presentation',
+			time: 'Thu, Jun 13 2024 at 4:00 PM',
+			status: 'In Progress',
+			description: 'Prepare and present the project progress to the client.'
 		},
 		{
-		  id: "5",
-		  task: 'Design Mockups',
-		  time: 'Fri, Jun 14 2024 at 1:00 PM',
-		  status: 'Done',
-		  description: 'Create design mockups for the new feature and share them with the team.'
+			id: "5",
+			task: 'Design Mockups',
+			time: 'Fri, Jun 14 2024 at 1:00 PM',
+			status: 'Done',
+			description: 'Create design mockups for the new feature and share them with the team.'
 		},
 		{
-		  id: "6",
-		  task: 'Update Documentation',
-		  time: 'Sat, Jun 15 2024 at 3:00 PM',
-		  status: 'Todo',
-		  description: 'Update the project documentation to reflect recent changes.'
+			id: "6",
+			task: 'Update Documentation',
+			time: 'Sat, Jun 15 2024 at 3:00 PM',
+			status: 'Todo',
+			description: 'Update the project documentation to reflect recent changes.'
 		},
 		{
-		  id: "7",
-		  task: 'Sprint Planning',
-		  time: 'Sun, Jun 5 2024 at 10:00 AM',
-		  status: 'In Progress',
-		  description: 'Plan the tasks and goals for the upcoming sprint with the team.'
+			id: "7",
+			task: 'Sprint Planning',
+			time: 'Sun, Jun 5 2024 at 10:00 AM',
+			status: 'In Progress',
+			description: 'Plan the tasks and goals for the upcoming sprint with the team.'
 		},
 		{
-		  id: "8",
-		  task: 'Bug Fixes',
-		  time: 'Mon, Jun 17 2024 at 5:00 PM',
-		  status: 'Done',
-		  description: 'Fix critical bugs reported by the QA team.'
+			id: "8",
+			task: 'Bug Fixes',
+			time: 'Mon, Jun 17 2024 at 5:00 PM',
+			status: 'Done',
+			description: 'Fix critical bugs reported by the QA team.'
 		},
 		{
-		  id: "9",
-		  task: 'Performance Testing',
-		  time: 'Tue, Jun 18 2024 at 3:00 PM',
-		  status: 'Todo',
-		  description: 'Conduct performance testing on the new release and document the results.'
+			id: "9",
+			task: 'Performance Testing',
+			time: 'Tue, Jun 18 2024 at 3:00 PM',
+			status: 'Todo',
+			description: 'Conduct performance testing on the new release and document the results.'
 		},
 		{
-		  id: "10",
-		  task: 'Code Deployment',
-		  time: 'Wed, Jun 19 2024 at 12:00 PM',
-		  status: 'Todo',
-		  description: 'Deploy the latest version of the code to the production environment.'
+			id: "10",
+			task: 'Code Deployment',
+			time: 'Wed, Jun 19 2024 at 12:00 PM',
+			status: 'Todo',
+			description: 'Deploy the latest version of the code to the production environment.'
 		}
-	  ])
+	])
 	const [preparedTasks, setpreparedTasks] = useState(tasks)
 	const [filter, setfilter] = useState<string | null>(null)
+	const [sort, setsort] = useState<string>("Date")
+	const [search, setSearch] = useState<string | null>(null)
+
 	
 	useEffect(() => {
-		function filterTasks(){
-			// setting filter states
+		// handles tasks filtering
+		function filterTasks() {
+			// setting filter states on dropdown
 			switch (filter) {
 				case "Todo":
 					setfilterAll(false)
@@ -109,14 +115,14 @@ function TodoList() {
 					setfilterInProgress(false)
 					setfilterDone(false)
 					break;
-				
+
 				case "In Progress":
 					setfilterAll(false)
 					setfilterTodo(false)
 					setfilterInProgress(true)
 					setfilterDone(false)
 					break;
-	
+
 				case "Done":
 					setfilterAll(false)
 					setfilterTodo(false)
@@ -130,25 +136,43 @@ function TodoList() {
 					setfilterDone(false)
 					break;
 			}
-			if (filter !== null){
+			if (filter !== null) {
 				const preparedTasks = tasks.filter(item => item.status.toLowerCase() === filter.toLowerCase());
 				setpreparedTasks(preparedTasks)
+				return preparedTasks
 			}
-			else{
+			else {
 				setpreparedTasks(tasks)
+				return tasks
 			}
 		}
+		// handles search
+		function searchTasks() {
+			const preparedTasks = filterTasks()
+			if (search !== null) {
+				const updatedTasks = preparedTasks.filter(item => item.task.toLowerCase().includes(search.toLocaleLowerCase()));
+				setpreparedTasks(updatedTasks)
+			}
+			if (search === null || search === ""){
+				setpreparedTasks(preparedTasks)
+			}
+		}
+		
 		filterTasks()
-	}, [filter, tasks])
-	
-	const handleTaskStatusChange = (id: string, status:string) =>{
-		const updatedTasks = tasks.map((task)=>{
-			return task.id === id?
-				 {...task, status: status} : task
+		searchTasks()
+	}, [search,filter,tasks])
+
+
+
+	// handles and updates tasks status change
+	const handleTaskStatusChange = (id: string, status: string) => {
+		const updatedTasks = tasks.map((task) => {
+			return task.id === id ?
+				{ ...task, status: status } : task
 		})
 		settasks(updatedTasks)
 	}
-	
+
 	return (
 
 		<div className="h-full w-full bg-white rounded-lg flex shadow-xl">
@@ -175,29 +199,52 @@ function TodoList() {
 			</div>
 			<div className="flex-1">
 				<div className="px-4 py-2 h-full w-full">
-					<div className="flex w-full justify-between items-center">
+					<div className="flex w-full justify-between items-center py-1">
 						<div className="text-4xl text-green-600">
 							Tasks
 						</div>
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild className="cursor-pointer">
-								<Filter className="mt-2 text-slate-400" />
+						<div className="flex gap-2 border-2 rounded-lg pe-2">
+							<Input placeholder="Search" className="border-none outline-none focus:ring-0 focus:outline-none" onChange={(event)=>{
+								setSearch(event.target.value)
+							}}></Input>
+							<DropdownMenu>
+								<DropdownMenuTrigger asChild className="cursor-pointer">
+									<ArrowDownUp className="mt-2 text-slate-400" />
 								</DropdownMenuTrigger>
-							<DropdownMenuContent>
-								<DropdownMenuCheckboxItem checked={filterAll} onClick={()=>{
-									setfilter(null)
-								}}>All</DropdownMenuCheckboxItem>
-								<DropdownMenuCheckboxItem checked={filterTodo}  onClick={()=>{
-									setfilter("Todo")
-								}}>Todo</DropdownMenuCheckboxItem>
-								<DropdownMenuCheckboxItem checked={filterInProgress}  onClick={()=>{
-									setfilter("In Progress")
-								}}>In Progress</DropdownMenuCheckboxItem>
-								<DropdownMenuCheckboxItem checked={filterDone}  onClick={()=>{
-									setfilter("Done")
-								}}>Done</DropdownMenuCheckboxItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
+								<DropdownMenuContent className="w-40">
+									<DropdownMenuCheckboxItem checked={filterAll} onClick={() => {
+										
+									}}>Alphabetic
+									<DropdownMenuShortcut><ArrowUpAZ /></DropdownMenuShortcut>
+									</DropdownMenuCheckboxItem>
+									<DropdownMenuCheckboxItem checked={filterTodo} onClick={() => {
+										
+									}}>
+										Urgency
+										<DropdownMenuShortcut><ArrowUpWideNarrow /></DropdownMenuShortcut>
+										</DropdownMenuCheckboxItem>
+								</DropdownMenuContent>
+							</DropdownMenu>
+							<DropdownMenu>
+								<DropdownMenuTrigger asChild className="cursor-pointer">
+									<Filter className="mt-2 text-slate-400" />
+								</DropdownMenuTrigger>
+								<DropdownMenuContent>
+									<DropdownMenuCheckboxItem checked={filterAll} onClick={() => {
+										setfilter(null)
+									}}>All</DropdownMenuCheckboxItem>
+									<DropdownMenuCheckboxItem checked={filterTodo} onClick={() => {
+										setfilter("Todo")
+									}}>Todo</DropdownMenuCheckboxItem>
+									<DropdownMenuCheckboxItem checked={filterInProgress} onClick={() => {
+										setfilter("In Progress")
+									}}>In Progress</DropdownMenuCheckboxItem>
+									<DropdownMenuCheckboxItem checked={filterDone} onClick={() => {
+										setfilter("Done")
+									}}>Done</DropdownMenuCheckboxItem>
+								</DropdownMenuContent>
+							</DropdownMenu>
+						</div>
 					</div>
 					<hr className="border-t-2 my-2" />
 					<ScrollArea className="h-[90%] w-full px-2">
