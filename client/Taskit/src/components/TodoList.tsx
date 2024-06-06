@@ -1,4 +1,4 @@
-import { ArrowDownUp, ArrowUpAZ, ArrowUpWideNarrow, Filter, Power } from "lucide-react"
+import { ArrowDownUp, ArrowDownWideNarrow, ArrowDownZA, ArrowUpAZ, ArrowUpWideNarrow, Filter, Power } from "lucide-react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import Tasks from "./Tasks"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion"
@@ -12,6 +12,8 @@ import {
 import { useEffect, useState } from "react"
 import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
 import { Input } from "./ui/input"
+import parseDate from "@/utils/dateParseUtil"
+
 type Task = {
 	id: string,
 	task: string,
@@ -20,12 +22,23 @@ type Task = {
 	description: string
 
 }
+type Checked = DropdownMenuCheckboxItemProps["checked"]
+
 function TodoList() {
-	type Checked = DropdownMenuCheckboxItemProps["checked"]
+	const [filter, setfilter] = useState<string | null>(null)
 	const [filterAll, setfilterAll] = useState<Checked>(true)
 	const [filterInProgress, setfilterInProgress] = useState<Checked>(false)
 	const [filterTodo, setfilterTodo] = useState<Checked>(false)
 	const [filterDone, setfilterDone] = useState<Checked>(false)
+
+	const [sortCriteria, setsortCriteria] = useState<string>("alphabetic-asc")
+	const [alphaAsc, setalphaAsc] = useState(true)
+	const [alphaDesc, setalphaDesc] = useState(false)
+	const [dateAsc, setdateAsc] = useState(false)
+	const [dateDesc, setdateDesc] = useState(false)
+
+	const [search, setSearch] = useState<string | null>(null)
+
 	const [tasks, settasks] = useState<Task[]>([
 		{
 			id: "1",
@@ -99,10 +112,57 @@ function TodoList() {
 		}
 	])
 	const [preparedTasks, setpreparedTasks] = useState(tasks)
-	const [filter, setfilter] = useState<string | null>(null)
-	const [sort, setsort] = useState<string>("Date")
-	const [search, setSearch] = useState<string | null>(null)
+	
+	useEffect(() => {
+		function sortTasks() {
+			// setting sort states on dropdown
+			switch (sortCriteria) {
+				case "alphabetic-asc":
+					setalphaAsc(true)
+					setalphaDesc(false)
+					setdateAsc(false)
+					setdateDesc(false)
+					break;
 
+				case "alphabetic-desc":
+					setalphaAsc(false)
+					setalphaDesc(true)
+					setdateAsc(false)
+					setdateDesc(false)
+					break;
+
+				case "date-asc":
+					setalphaAsc(false)
+					setalphaDesc(false)
+					setdateAsc(true)
+					setdateDesc(false)
+					break;
+				case "date-desc":
+					setalphaAsc(false)
+					setalphaDesc(false)
+					setdateAsc(false)
+					setdateDesc(true)
+					break;
+			
+			}
+			const sortedTasks = [...tasks].sort((a, b): number => {
+				if (sortCriteria === 'date-asc') {
+					return parseDate(a.time).getTime() - parseDate(b.time).getTime();
+				} else if (sortCriteria === 'date-desc') {
+					return parseDate(b.time).getTime() - parseDate(a.time).getTime();
+				} else if (sortCriteria === 'alphabetic-asc') {
+					return a.task.localeCompare(b.task);
+				} else if (sortCriteria === 'alphabetic-desc') {
+					return b.task.localeCompare(a.task);
+				}
+				return 0;
+			});
+			settasks(sortedTasks);
+		};
+
+		sortTasks()
+	}, [sortCriteria])
+	
 	
 	useEffect(() => {
 		// handles tasks filtering
@@ -146,6 +206,7 @@ function TodoList() {
 				return tasks
 			}
 		}
+
 		// handles search
 		function searchTasks() {
 			const preparedTasks = filterTasks()
@@ -174,7 +235,6 @@ function TodoList() {
 	}
 
 	return (
-
 		<div className="h-full w-full bg-white rounded-lg flex shadow-xl">
 			<div className="flex flex-col basis-1/2 bg-green-700 rounded-s-lg px-4 py-2 h-full">
 				<div className="flex justify-between items-center">
@@ -212,16 +272,27 @@ function TodoList() {
 									<ArrowDownUp className="mt-2 text-slate-400" />
 								</DropdownMenuTrigger>
 								<DropdownMenuContent className="w-40">
-									<DropdownMenuCheckboxItem checked={filterAll} onClick={() => {
-										
-									}}>Alphabetic
+									<DropdownMenuCheckboxItem checked={alphaAsc} onClick={() => {
+										setsortCriteria('alphabetic-asc')
+									}}>Alpha Asc
 									<DropdownMenuShortcut><ArrowUpAZ /></DropdownMenuShortcut>
 									</DropdownMenuCheckboxItem>
-									<DropdownMenuCheckboxItem checked={filterTodo} onClick={() => {
-										
+									<DropdownMenuCheckboxItem checked={alphaDesc} onClick={() => {
+										setsortCriteria('alphabetic-desc')
+									}}>Alpha Desc
+									<DropdownMenuShortcut><ArrowDownZA /></DropdownMenuShortcut>
+									</DropdownMenuCheckboxItem>
+									<DropdownMenuCheckboxItem checked={dateAsc} onClick={() => {
+										setsortCriteria('date-asc')
 									}}>
-										Urgency
+										Date Asc
 										<DropdownMenuShortcut><ArrowUpWideNarrow /></DropdownMenuShortcut>
+										</DropdownMenuCheckboxItem>
+										<DropdownMenuCheckboxItem checked={dateDesc} onClick={() => {
+										setsortCriteria('date-desc')
+									}}>
+										Date desc
+										<DropdownMenuShortcut><ArrowDownWideNarrow /></DropdownMenuShortcut>
 										</DropdownMenuCheckboxItem>
 								</DropdownMenuContent>
 							</DropdownMenu>
