@@ -26,6 +26,7 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer"
 import { Button } from "./ui/button"
+import Setting from "./Setting"
 
 
 type Task = {
@@ -280,7 +281,7 @@ function TodoList() {
 					<div className="text-white text-4xl">
 						Taskit
 					</div>
-					<Power className="hover:text-red-400 cursor-pointer text-green-400" />
+					<Setting />
 				</div>
 				<div className="flex flex-col h-full pt-[30%] items-center">
 					<div>
@@ -326,7 +327,6 @@ function TodoList() {
 										</form>
 									</DrawerContent>
 								</Drawer>
-
 							</div>
 						</div>
 						<div className="flex gap-2 border-2 rounded-lg pe-2">
