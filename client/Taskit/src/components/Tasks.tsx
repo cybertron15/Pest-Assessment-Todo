@@ -1,11 +1,13 @@
 import { Pencil } from "lucide-react";
 import React, { useEffect, useState } from "react";
+
 import {
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
 } from "./ui/tooltip";
+
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -24,6 +26,7 @@ import {
 } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "./ui/input";
+import parseDate from "@/utils/dateParseUtil";
 
 type Props = {
     id: string;
@@ -32,11 +35,7 @@ type Props = {
     status: string;
     onStatusChange: (id: string, newStatus: string) => void
 };
-function parseDate(dateString: string) {
-    // Replace 'at' with a comma to create a format that can be parsed by the Date constructor
-    const dateToParse = dateString.replace(' at', ',');
-    return new Date(dateToParse);
-}
+type Checked = DropdownMenuCheckboxItemProps["checked"]
 
 function Tasks({
     id,
@@ -45,7 +44,6 @@ function Tasks({
     status,
     onStatusChange
 }: Props) {
-    type Checked = DropdownMenuCheckboxItemProps["checked"]
     const [Todo, setTodo] = useState<Checked>(false)
     const [InProgress, setInProgress] = useState<Checked>(false)
     const [Done, setDone] = useState<Checked>(false)
