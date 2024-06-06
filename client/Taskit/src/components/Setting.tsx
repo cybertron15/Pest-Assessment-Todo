@@ -8,23 +8,37 @@ import {
 	DropdownMenuItem
 } from "@/components/ui/dropdown-menu"
 import Logout from './Logout';
+import Profile from './Profile';
 
 
 function Setting() {
-	const triggerRef = useRef<HTMLButtonElement>(null);
+	const logoutTriggerRef = useRef<HTMLButtonElement>(null);
+	const profileDialogrRef = useRef<HTMLButtonElement>(null);
+	const profileDrawerRef = useRef<HTMLButtonElement>(null);
+	const windowWidth = window.innerWidth
 	return (
 		<>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild className="cursor-pointer">
-					<Settings className="cursor-pointer text-green-400 hover:rotate-180 transition duration-100" />
+					<Settings size={30} className="cursor-pointer lg text-gray-400 lg:text-green-400 hover:rotate-180 transition duration-100" />
 				</DropdownMenuTrigger>
 				<DropdownMenuContent className="w-40">
-					<DropdownMenuItem >Profile
+					<DropdownMenuItem onClick={() => {
+						
+						
+						if (profileDialogrRef.current &&  windowWidth >= 1024) {
+							profileDialogrRef.current.click();
+						}
+						if (profileDrawerRef.current &&  windowWidth <= 1024) {
+							profileDrawerRef.current.click();
+						}
+					}
+					}>Profile
 						<DropdownMenuShortcut><User size={20} className='' /></DropdownMenuShortcut>
 					</DropdownMenuItem>
 					<DropdownMenuItem className='group' onClick={() => {
-						if (triggerRef.current) {
-							triggerRef.current.click();
+						if (logoutTriggerRef.current) {
+							logoutTriggerRef.current.click();
 						}
 					}
 					}>
@@ -35,8 +49,8 @@ function Setting() {
 			</DropdownMenu >
 
 			{/* logout trigger */}
-			<Logout triggerRef={triggerRef}/>
-			
+			<Logout triggerRef={logoutTriggerRef}/>
+			<Profile dialogRef={profileDialogrRef} drawerRef={profileDrawerRef}/>
 			
 		</>
 	)
