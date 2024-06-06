@@ -9,6 +9,17 @@ import {
 } from "./ui/tooltip";
 
 import {
+    Drawer,
+    DrawerClose,
+    DrawerContent,
+    DrawerDescription,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerTrigger,
+
+} from "@/components/ui/drawer"
+import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuTrigger,
@@ -27,11 +38,14 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "./ui/input";
 import parseDate from "@/utils/dateParseUtil";
+import { Button } from "./ui/button";
+import formatDate from "@/utils/dateFortmatUtil";
 
 type Props = {
     id: string;
     task: string;
     time: string;
+    desciption: string;
     status: string;
     onStatusChange: (id: string, newStatus: string) => void
 };
@@ -42,6 +56,7 @@ function Tasks({
     task,
     time,
     status,
+    desciption,
     onStatusChange
 }: Props) {
     const [Todo, setTodo] = useState<Checked>(false)
@@ -76,26 +91,26 @@ function Tasks({
                 <TooltipProvider >
                     <Tooltip>
                         <div className="flex items-center gap-1.5">
-                            <TooltipTrigger className="text-xl font-Inter truncate ... max-w-48 text-start">
+                            <TooltipTrigger className="text-lg md:text-xl font-Inter truncate ... max-w-36 md:max-w-48 text-start">
                                 {task}
                             </TooltipTrigger>
                             <Dialog>
                                 <DialogTrigger onClick={(event) => {
                                     event.stopPropagation() // stopping event propagation to prevent accordion trigger
-                                }}>
+                                }} className="hidden lg:block">
                                     <Pencil size={16} className="text-slate-500 cursor-pointer" />
                                 </DialogTrigger>
                                 <DialogContent onClick={(event) => {
                                     event.stopPropagation()
-                                }} className=" border-none">
+                                }} className="border-none hidden lg:block">
                                     <DialogHeader>
-                                        <DialogTitle className="text-green-700 text-xl">Edit Task</DialogTitle>
+                                        <DialogTitle className="text-green-700 text-xl mb-3">Edit Task</DialogTitle>
                                     </DialogHeader>
 
-                                    <form className="flex flex-col gap-2 w-full">
-                                        <Input placeholder="Task" className="text-lg border-2 " required />
-                                        <Textarea placeholder="Description" className="bg-none rounded-lg text-lg px-2 py-1 text-gray-500 bg-white  border-2" />
-                                        <input type="datetime-local" placeholder="Description" className="border-2 rounded-lg text-lg px-2 py-1" required />
+                                    <form className="flex flex-col gap-2 w-full mb-2">
+                                        <input placeholder="Task" defaultValue={task} className="bg-none rounded-lg text-lg px-2 py-1 text-gray-500 bg-white border-2" required />
+                                        <textarea placeholder="Description" defaultValue={desciption} className="bg-none rounded-lg text-lg px-2 py-1 text-gray-500 bg-white border-2" />
+                                        <input type="datetime-local" defaultValue={formatDate(time)} placeholder="Description" className="border-2 rounded-lg text-lg px-2 py-1 text-gray-500" required />
 
                                         <DialogFooter >
                                             <input type="button" value="Delete" className="bg-red-500 rounded-lg text-lg px-2 py-1 text-white cursor-pointer w-20" />
@@ -104,6 +119,33 @@ function Tasks({
                                     </form>
                                 </DialogContent>
                             </Dialog>
+                            <Drawer>
+                                <DrawerTrigger onClick={(event) => {
+                                    event.stopPropagation() // stopping event propagation to prevent accordion trigger
+                                }} className="lg:hidden">
+                                    <Pencil size={16} className="text-slate-500 cursor-pointer" />
+                                </DrawerTrigger>
+                                <DrawerContent className="bg-green-700 flex flex-col items-center border-none lg:hidden">
+                                    <DrawerHeader>
+                                        <DrawerTitle>
+                                            <h2 className="text-white text-2xl mb-2">
+                                                Edit Task
+                                            </h2>
+                                        </DrawerTitle>
+                                    </DrawerHeader>
+                                    <form className="flex flex-col gap-2 w-72">
+                                        <input placeholder="Task" defaultValue={task} className="bg-none rounded-lg text-lg px-2 py-1 text-gray-500 bg-white border-2" required />
+                                        <textarea placeholder="Description" defaultValue={desciption} className="bg-none rounded-lg text-lg px-2 py-1 text-gray-500 bg-white border-2" />
+                                        <input type="datetime-local" defaultValue={formatDate(time)} placeholder="Description" className="border-2 rounded-lg text-lg px-2 py-1 text-gray-500 w-full" required />
+                                        <DrawerFooter className="px-0">
+                                            <input type="submit" value="Edit Task" className="bg-green-600 rounded-lg text-lg py-1 text-white cursor-pointer" required />
+                                            <DrawerClose>
+                                                <Button className="bg-green-700 w-full border-2 border-green-600">Cancel</Button>
+                                            </DrawerClose>
+                                        </DrawerFooter>
+                                    </form>
+                                </DrawerContent>
+                            </Drawer>
                             {
                                 (parseDate(time) < new Date()) && !Done && <div className="text-red-500 font-mono mt-1">due!!! </div>
                             }
@@ -123,17 +165,17 @@ function Tasks({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuCheckboxItem checked={Todo} onClick={(event) => {
-                        onStatusChange(id,"Todo")
+                        onStatusChange(id, "Todo")
                         setTaskstatus("Todo")
                         event.stopPropagation() // stopping event propagation to prevent accordion trigger
                     }}>Todo</DropdownMenuCheckboxItem>
                     <DropdownMenuCheckboxItem checked={InProgress} onClick={(event) => {
-                        onStatusChange(id,"In Progress")
+                        onStatusChange(id, "In Progress")
                         setTaskstatus("In Progress")
                         event.stopPropagation()
                     }}>In Progress</DropdownMenuCheckboxItem>
                     <DropdownMenuCheckboxItem checked={Done} onClick={(event) => {
-                        onStatusChange(id,"Done")
+                        onStatusChange(id, "Done")
                         setTaskstatus("Done")
                         event.stopPropagation()
                     }}>Done</DropdownMenuCheckboxItem>

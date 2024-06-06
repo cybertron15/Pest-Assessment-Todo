@@ -1,4 +1,4 @@
-import { ArrowDownUp, ArrowDownWideNarrow, ArrowDownZA, ArrowUpAZ, ArrowUpWideNarrow, Filter, Power } from "lucide-react"
+import { ArrowDownUp, ArrowDownWideNarrow, ArrowDownZA, ArrowUpAZ, ArrowUpWideNarrow, Plus, Filter, Power } from "lucide-react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import Tasks from "./Tasks"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion"
@@ -13,6 +13,19 @@ import { useEffect, useState } from "react"
 import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
 import { Input } from "./ui/input"
 import parseDate from "@/utils/dateParseUtil"
+
+import {
+	Drawer,
+	DrawerClose,
+	DrawerContent,
+	DrawerDescription,
+	DrawerFooter,
+	DrawerHeader,
+	DrawerTitle,
+	DrawerTrigger,
+} from "@/components/ui/drawer"
+import { Button } from "./ui/button"
+
 
 type Task = {
 	id: string,
@@ -84,7 +97,7 @@ function TodoList() {
 		},
 		{
 			id: "7",
-			task: 'Sprint Planning',
+			task: 'Sprint Planningsss',
 			time: 'Sun, Jun 5 2024 at 10:00 AM',
 			status: 'In Progress',
 			description: 'Plan the tasks and goals for the upcoming sprint with the team.'
@@ -109,12 +122,41 @@ function TodoList() {
 			time: 'Wed, Jun 19 2024 at 12:00 PM',
 			status: 'Todo',
 			description: 'Deploy the latest version of the code to the production environment.'
-		}
+		},
+		{
+			id: "11",
+			task: 'Submit Project Report',
+			time: 'Mon, Jun 10 2024 at 9:00 AM',
+			status: 'In Progress',
+			description: 'Complete the final project report and submit it to the project manager.'
+		},
+		{
+			id: "12",
+			task: 'Team Meeting',
+			time: 'Tue, Jun 11 2024 at 11:00 AM',
+			status: 'Done',
+			description: 'Discuss project milestones and next steps with the team.'
+		},
+		{
+			id: "13",
+			task: 'Code Review',
+			time: 'Wed, Jun 12 2024 at 2:00 PM',
+			status: 'Todo',
+			description: 'Review the latest code commits and provide feedback to the developers.'
+		},
+		{
+			id: "14",
+			task: 'Client Presentation',
+			time: 'Thu, Jun 13 2024 at 4:00 PM',
+			status: 'In Progress',
+			description: 'Prepare and present the project progress to the client.'
+		},
 	])
 	const [preparedTasks, setpreparedTasks] = useState(tasks)
-	
 	useEffect(() => {
 		function sortTasks() {
+			console.log("sort");
+
 			// setting sort states on dropdown
 			switch (sortCriteria) {
 				case "alphabetic-asc":
@@ -143,7 +185,7 @@ function TodoList() {
 					setdateAsc(false)
 					setdateDesc(true)
 					break;
-			
+
 			}
 			const sortedTasks = [...tasks].sort((a, b): number => {
 				if (sortCriteria === 'date-asc') {
@@ -159,14 +201,15 @@ function TodoList() {
 			});
 			settasks(sortedTasks);
 		};
-
 		sortTasks()
 	}, [sortCriteria])
-	
-	
+
+
 	useEffect(() => {
 		// handles tasks filtering
 		function filterTasks() {
+			// console.log("filter");
+
 			// setting filter states on dropdown
 			switch (filter) {
 				case "Todo":
@@ -209,20 +252,20 @@ function TodoList() {
 
 		// handles search
 		function searchTasks() {
+			// console.log("search");
+
 			const preparedTasks = filterTasks()
 			if (search !== null) {
 				const updatedTasks = preparedTasks.filter(item => item.task.toLowerCase().includes(search.toLocaleLowerCase()));
 				setpreparedTasks(updatedTasks)
 			}
-			if (search === null || search === ""){
+			if (search === null || search === "") {
 				setpreparedTasks(preparedTasks)
 			}
 		}
-		
 		filterTasks()
 		searchTasks()
-	}, [search,filter,tasks])
-
+	}, [search, filter, tasks])
 
 
 	// handles and updates tasks status change
@@ -235,8 +278,8 @@ function TodoList() {
 	}
 
 	return (
-		<div className="h-full w-full bg-white rounded-lg flex shadow-xl">
-			<div className="flex flex-col basis-1/2 bg-green-700 rounded-s-lg px-4 py-2 h-full">
+		<div className="h-full w-full bg-white lg:rounded-lg flex shadow-xl">
+			<div className="lg:flex flex-col basis-1/2 bg-green-700 lg:rounded-s-lg px-4 py-2 h-full hidden">
 				<div className="flex justify-between items-center">
 					<div className="text-white text-4xl">
 						Taskit
@@ -257,14 +300,41 @@ function TodoList() {
 					</div>
 				</div>
 			</div>
-			<div className="flex-1">
-				<div className="px-4 py-2 h-full w-full">
-					<div className="flex w-full justify-between items-center py-1">
+			<div className="flex-1 ">
+				<div className="px-4 py-2 h-full w-full ">
+					<div className="flex w-full gap-8 justify-between items-center">
 						<div className="text-4xl text-green-600">
-							Tasks
+							<div className="hidden lg:block">Tasks</div>
+							<div className="lg:hidden flex gap-3 items-center">
+								<div className="text-black">Taskit</div>
+								<Drawer>
+									<DrawerTrigger className="bg-green-600 rounded-md mt-1 shadow-xl p-1"><Plus className="text-white" size={22} /></DrawerTrigger>
+									<DrawerContent className="bg-green-700 flex flex-col items-center border-none">
+										<DrawerHeader>
+											<DrawerTitle>
+												<h2 className="text-white text-2xl mb-2">
+													Create Tasks
+												</h2>
+											</DrawerTitle>
+										</DrawerHeader>
+										<form className="flex flex-col gap-2 w-72">
+											<input type="text" placeholder="Task" className="bg-none rounded-lg text-lg px-2 py-1 text-gray-400" required />
+											<input type="text" placeholder="Description" className="bg-none rounded-lg text-lg px-2 py-1 text-gray-400" required />
+											<input type="datetime-local" className="w-full bg-none rounded-lg text-lg px-2 py-1 text-gray-400" required />
+										<DrawerFooter className="px-0">
+											<input type="submit" value="Add Task" className="bg-green-600 rounded-lg text-lg py-1 text-white cursor-pointer" required />
+											<DrawerClose>
+												<Button className="bg-green-700 w-full border-2 border-green-600">Cancel</Button>
+											</DrawerClose>
+										</DrawerFooter>
+										</form>
+									</DrawerContent>
+								</Drawer>
+
+							</div>
 						</div>
 						<div className="flex gap-2 border-2 rounded-lg pe-2">
-							<Input placeholder="Search" className="border-none outline-none focus:ring-0 focus:outline-none" onChange={(event)=>{
+							<Input placeholder="Search" className="border-none outline-none focus:ring-0 focus:outline-none" onChange={(event) => {
 								setSearch(event.target.value)
 							}}></Input>
 							<DropdownMenu>
@@ -275,25 +345,25 @@ function TodoList() {
 									<DropdownMenuCheckboxItem checked={alphaAsc} onClick={() => {
 										setsortCriteria('alphabetic-asc')
 									}}>Alpha Asc
-									<DropdownMenuShortcut><ArrowUpAZ /></DropdownMenuShortcut>
+										<DropdownMenuShortcut><ArrowUpAZ /></DropdownMenuShortcut>
 									</DropdownMenuCheckboxItem>
 									<DropdownMenuCheckboxItem checked={alphaDesc} onClick={() => {
 										setsortCriteria('alphabetic-desc')
 									}}>Alpha Desc
-									<DropdownMenuShortcut><ArrowDownZA /></DropdownMenuShortcut>
+										<DropdownMenuShortcut><ArrowDownZA /></DropdownMenuShortcut>
 									</DropdownMenuCheckboxItem>
 									<DropdownMenuCheckboxItem checked={dateAsc} onClick={() => {
 										setsortCriteria('date-asc')
 									}}>
 										Date Asc
 										<DropdownMenuShortcut><ArrowUpWideNarrow /></DropdownMenuShortcut>
-										</DropdownMenuCheckboxItem>
-										<DropdownMenuCheckboxItem checked={dateDesc} onClick={() => {
+									</DropdownMenuCheckboxItem>
+									<DropdownMenuCheckboxItem checked={dateDesc} onClick={() => {
 										setsortCriteria('date-desc')
 									}}>
 										Date desc
 										<DropdownMenuShortcut><ArrowDownWideNarrow /></DropdownMenuShortcut>
-										</DropdownMenuCheckboxItem>
+									</DropdownMenuCheckboxItem>
 								</DropdownMenuContent>
 							</DropdownMenu>
 							<DropdownMenu>
@@ -318,13 +388,13 @@ function TodoList() {
 						</div>
 					</div>
 					<hr className="border-t-2 my-2" />
-					<ScrollArea className="h-[90%] w-full px-2">
+					<ScrollArea className="h-[90%] w-full md:px-1">
 						{
 							preparedTasks.map((task) => {
 								return <Accordion type="single" key={task.id} collapsible className="border-b-2 px-2 mb-2">
 									<AccordionItem value={"test"}>
 										<AccordionTrigger>
-											<Tasks task={task.task} time={task.time} status={task.status} id={task.id} onStatusChange={handleTaskStatusChange} />
+											<Tasks task={task.task} time={task.time} status={task.status} id={task.id} desciption={task.description} onStatusChange={handleTaskStatusChange} />
 										</AccordionTrigger>
 										<AccordionContent className="px-1">
 											<div className="font-medium">
