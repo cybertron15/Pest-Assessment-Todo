@@ -2,7 +2,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-
+from .models import Tasks
 # getting custom user model
 User = get_user_model()
 
@@ -12,7 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'id','full_name','username','email','password','re_password'
+            'full_name','username','email','password','re_password'
         ]
     
     def validate(self, data):
@@ -39,3 +39,17 @@ class UserSerializer(serializers.ModelSerializer):
         validated_data['password'] = make_password(validated_data['password'])
 
         return super().create(validated_data)
+    
+class TaskSerializers(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+
+    class Meta:
+        model = Tasks
+        fields = [
+            "id",
+            "owner",
+            "task",
+            "status",
+            "description",
+            "due"
+        ]
