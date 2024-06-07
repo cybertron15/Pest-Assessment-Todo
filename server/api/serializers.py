@@ -8,12 +8,14 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     re_password = serializers.CharField(write_only=True, required=True)
+    password = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = User
         fields = [
             'full_name','username','email','password','re_password'
         ]
+        
     
     def validate(self, data):
         # Call super to run default validations
