@@ -54,7 +54,7 @@ function TodoList() {
 	const [dateDesc, setdateDesc] = useState(false)
 
 	const [search, setSearch] = useState<string | null>(null)
-	const [quote, setquote] = useState({quote:"", author:""})
+	// const [quote, setquote] = useState({quote:"", author:""})
 
 	const [tasks, settasks] = useState<Task[]>([
 		{
@@ -275,8 +275,8 @@ function TodoList() {
 		})
 		settasks(updatedTasks)
 	}
-	
-	
+
+
 	return (
 		<div className="h-full w-full bg-white lg:rounded-lg flex shadow-xl">
 			<div className="lg:flex flex-col basis-1/2 bg-green-700 lg:rounded-s-lg px-4 py-2 h-full hidden">
@@ -286,11 +286,11 @@ function TodoList() {
 					</div>
 					<Setting />
 				</div>
-				<div className="flex flex-col h-full items-center">
-					<div className="text-white text-lg mt-[10%]">
+				<div className="flex flex-col h-full mt-[35%] items-center">
+					{/* <div className="text-white text-lg mt-[10%]">
 						Hey Palash! You have {tasks.filter(task => task.status !== "Done").length} tasks to conquer.
-					</div>
-					<div className="mt-[15%]">
+					</div> */}
+					<div className="">
 						<h2 className="text-white text-2xl mb-2">
 							Create Tasks
 						</h2>
@@ -346,7 +346,7 @@ function TodoList() {
 							</div>
 						</div>
 						<div className="flex gap-2 border-2 rounded-lg pe-2">
-							<Input placeholder="Search" className="border-none outline-none focus:ring-0 focus:outline-none" onChange={(event) => {
+							<Input placeholder="Search" className="border-none outline-none" onChange={(event) => {
 								setSearch(event.target.value)
 							}}></Input>
 							<DropdownMenu>
@@ -380,7 +380,7 @@ function TodoList() {
 							</DropdownMenu>
 							<DropdownMenu>
 								<DropdownMenuTrigger asChild className="cursor-pointer">
-									<Filter className="mt-2 text-slate-400" />
+									<Filter className={`mt-2 ${filterAll ? "text-slate-400" : "text-green-600"}`} />
 								</DropdownMenuTrigger>
 								<DropdownMenuContent>
 									<DropdownMenuCheckboxItem checked={filterAll} onClick={() => {
@@ -414,6 +414,9 @@ function TodoList() {
 													<Tasks task={task.task} time={task.time} status={task.status} id={task.id} desciption={task.description} onStatusChange={handleTaskStatusChange} />
 												</AccordionTrigger>
 												<AccordionContent className="px-1">
+													<div className="font-medium">
+														Task: {task.task}
+													</div>
 													<div className="font-medium">
 														Description
 													</div>
