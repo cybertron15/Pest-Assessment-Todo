@@ -29,3 +29,13 @@ class TaskListCreate(generics.ListCreateAPIView):
     def get_queryset(self):
         user = self.request.user
         return Tasks.objects.filter(owner=user)
+
+class TaskRetriveUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = TaskSerializers
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication,SessionAuthentication]
+    queryset = Tasks.objects.all()
+
+    def get_queryset(self):
+        user = self.request.user
+        return Tasks.objects.filter(owner=user)
