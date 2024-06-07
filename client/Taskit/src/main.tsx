@@ -8,20 +8,22 @@ import "./index.css";
 import Todo from "./routes/Todo";
 import Error from "./components/ErrorElement";
 import Login from "./routes/Login";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/login",
+    element: <Login />,
+    errorElement: <Error />,
+  },
+  {
+    element: <ProtectedRoute isAuthenticated={false} />,
     errorElement: <Error />,
     children: [
       {
-        path: "todo",
-        element: <Todo />,
+        path: "/tasks",
+        element: <Todo />
       },
-      {
-        path: "login",
-        element: <Login />,
-      }
     ]
   },
 ]);
