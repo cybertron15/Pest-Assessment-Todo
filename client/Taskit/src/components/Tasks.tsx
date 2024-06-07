@@ -64,19 +64,16 @@ function Tasks({
 
     return (
         <div
-            className="flex justify-between items-center p-1 w-full"
+            className=" flex justify-between items-center p-1 w-full"
         >
-            <div className="flex flex-col ">
+            <div className=" flex flex-col">
                 <TooltipProvider >
                     <Tooltip>
-                        <div className="flex items-center gap-1.5">
+                        <div className=" flex items-center gap-1.5">
                             <TooltipTrigger className="text-lg md:text-xl font-Inter truncate ... max-w-36 md:max-w-48 text-start">
                                 {task}
                             </TooltipTrigger>
                            <Edit task={task} desciption={desciption} time={time} />
-                            {
-                                (parseDate(time) < new Date()) && !Done && <div className="text-red-500 font-mono mt-1">due!!!</div>
-                            }
                         </div>
                         <TooltipContent className="bg-slate-600">{task}</TooltipContent>
                     </Tooltip>

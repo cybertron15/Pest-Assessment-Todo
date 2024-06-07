@@ -28,6 +28,7 @@ import {
 import { Button } from "./ui/button"
 import Setting from "./Setting"
 import loadInspirationalQuote from "@/utils/quoteLoadingUtil"
+import { Badge } from "./ui/badge"
 
 
 type Task = {
@@ -410,7 +411,10 @@ function TodoList() {
 									(preparedTasks.map((task) => {
 										return <Accordion type="single" key={task.id} collapsible className="border-b-2 px-2 mb-2">
 											<AccordionItem value={"test"}>
-												<AccordionTrigger>
+												<AccordionTrigger className="relative">
+													{
+														(parseDate(task.time) < new Date()) && <Badge className="absolute z-30 -top-2 -left-2 text-xs bg-red-500 text-white rounded-s-none opacity-85 shadow-md">Due!!!</Badge>
+													}
 													<Tasks task={task.task} time={task.time} status={task.status} id={task.id} desciption={task.description} onStatusChange={handleTaskStatusChange} />
 												</AccordionTrigger>
 												<AccordionContent className="px-1">
@@ -431,7 +435,6 @@ function TodoList() {
 								<div>
 									spinner
 								</div>
-
 						}
 					</ScrollArea>
 
