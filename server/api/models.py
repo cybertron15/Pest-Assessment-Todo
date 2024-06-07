@@ -2,9 +2,9 @@ from django.db import models
 import uuid
 from django.contrib.auth.models import AbstractUser
 
-class Staus(models.IntegerChoices):
+class Status(models.IntegerChoices):
     TODO = 1,'Todo'
-    IN_PROGRESS = 2,'In_porgress'
+    IN_PROGRESS = 2,'InPorgress'
     DONE = 3,'Done'
 
 # custom user model for storing user auth and other data
@@ -22,8 +22,8 @@ class Tasks(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     owner = models.ForeignKey('api.CustomUser' ,related_name='tasks', on_delete=models.CASCADE)
     task = models.CharField(max_length=50)
-    status = models.IntegerField(choices=Staus.choices, default=1)
-    description = models.TextField(max_length=200)
+    status = models.IntegerField(choices=Status.choices, default=1)
+    description = models.TextField(max_length=200, default="")
     due = models.DateTimeField()
 
     class Meta:
