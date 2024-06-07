@@ -29,7 +29,7 @@ class TaskListCreate(generics.ListCreateAPIView):
     def get_queryset(self):
         user = self.request.user
         return Tasks.objects.filter(owner=user)
-
+    
 class TaskRetriveUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TaskSerializers
     permission_classes = [IsAuthenticated]

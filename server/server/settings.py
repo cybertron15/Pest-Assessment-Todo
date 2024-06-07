@@ -14,13 +14,16 @@ from pathlib import Path
 from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+from .utils import ENV_VARS
 
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = ENV_VARS['DJ_SECRET']
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True if ENV_VARS['MODE'] == 'dev' else False
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-s&p6q*l-9z$317!m2xe%8337la=c9$^a!sp2c-&7ass2sr&5h9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
