@@ -30,13 +30,12 @@ export default async function axiosAuth(formData: FormData){
             }
 		}
 	} catch (error) {
-		console.log(axios.isAxiosError(error));
 		console.error("Error during form submission:", error);
-
 		if (axios.isAxiosError(error) && error.response) {
 			const data = error.response.data
 			const status = error.response.status
-
+			
+			
 			if (status === 401) {
 				return {
                     success:false,
@@ -78,6 +77,6 @@ export default async function axiosAuth(formData: FormData){
 			};
 		}
 
-		return { message: "Unknown form submission" };
+		return { errorMessage: error.message || "Unknown form submission" };
 	}
 }
