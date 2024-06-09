@@ -90,17 +90,17 @@ function Tasks({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuCheckboxItem checked={Todo} onClick={(event) => {
-                        onStatusChange(id, "Todo")
+                        onStatusChange(id, "1")
                         setTaskstatus("Todo")
                         event.stopPropagation() // stopping event propagation to prevent accordion trigger
                     }}>Todo</DropdownMenuCheckboxItem>
                     <DropdownMenuCheckboxItem checked={InProgress} onClick={(event) => {
-                        onStatusChange(id, "In Progress")
+                        onStatusChange(id, "2")
                         setTaskstatus("In Progress")
                         event.stopPropagation()
                     }}>In Progress</DropdownMenuCheckboxItem>
                     <DropdownMenuCheckboxItem checked={Done} onClick={(event) => {
-                        onStatusChange(id, "Done")
+                        onStatusChange(id, "3")
                         setTaskstatus("Done")
                         event.stopPropagation()
                     }}>Done</DropdownMenuCheckboxItem>

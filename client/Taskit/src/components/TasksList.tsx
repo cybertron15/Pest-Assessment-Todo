@@ -27,19 +27,20 @@ import {
 import { Button } from "./ui/button"
 import Setting from "./Setting"
 import { Badge } from "./ui/badge"
+import { useLoaderData } from "react-router-dom"
 
 
 type Task = {
 	id: string,
 	task: string,
-	time: string,
+	due: string,
 	status: string,
 	description: string
 
 }
 type Checked = DropdownMenuCheckboxItemProps["checked"]
-
-function TodoList() {
+type TaskStatusMap = {[key:string]:string}
+function TaskList() {
 	const [filter, setfilter] = useState<string | null>(null)
 	const [filterAll, setfilterAll] = useState<Checked>(true)
 	const [filterInProgress, setfilterInProgress] = useState<Checked>(false)
@@ -54,107 +55,115 @@ function TodoList() {
 
 	const [search, setSearch] = useState<string | null>(null)
 	// const [quote, setquote] = useState({quote:"", author:""})
+	const [tasks, settasks] = useState<Task[]>(useLoaderData() as Task[])
+	console.log(tasks);
+	const taskStatusMap : TaskStatusMap = {
+		"1":"Todo",
+		"2":"In Progress",
+		"3":"Done"
+	}
+	
+	// const [tasks, settasks] = useState<Task[]>([
+	// 	{
+	// 		id: "1",
+	// 		task: 'Submit Project Report',
+	// 		time: 'Mon, Jun 10 2024 at 9:00 AM',
+	// 		status: 'In Progress',
+	// 		description: 'Complete the final project report and submit it to the project manager.'
+	// 	},
+	// 	{
+	// 		id: "2",
+	// 		task: 'Team Meeting',
+	// 		time: 'Tue, Jun 11 2024 at 11:00 AM',
+	// 		status: 'Done',
+	// 		description: 'Discuss project milestones and next steps with the team.'
+	// 	},
+	// 	{
+	// 		id: "3",
+	// 		task: 'Code Review',
+	// 		time: 'Wed, Jun 12 2024 at 2:00 PM',
+	// 		status: 'Todo',
+	// 		description: 'Review the latest code commits and provide feedback to the developers.'
+	// 	},
+	// 	{
+	// 		id: "4",
+	// 		task: 'Client Presentation',
+	// 		time: 'Thu, Jun 13 2024 at 4:00 PM',
+	// 		status: 'In Progress',
+	// 		description: 'Prepare and present the project progress to the client.'
+	// 	},
+	// 	{
+	// 		id: "5",
+	// 		task: 'Design Mockups',
+	// 		time: 'Fri, Jun 14 2024 at 1:00 PM',
+	// 		status: 'Done',
+	// 		description: 'Create design mockups for the new feature and share them with the team.'
+	// 	},
+	// 	{
+	// 		id: "6",
+	// 		task: 'Update Documentation',
+	// 		time: 'Sat, Jun 15 2024 at 3:00 PM',
+	// 		status: 'Todo',
+	// 		description: 'Update the project documentation to reflect recent changes.'
+	// 	},
+	// 	{
+	// 		id: "7",
+	// 		task: 'Sprint Planningsss',
+	// 		time: 'Sun, Jun 5 2024 at 10:00 AM',
+	// 		status: 'In Progress',
+	// 		description: 'Plan the tasks and goals for the upcoming sprint with the team.'
+	// 	},
+	// 	{
+	// 		id: "8",
+	// 		task: 'Bug Fixes',
+	// 		time: 'Mon, Jun 17 2024 at 5:00 PM',
+	// 		status: 'Done',
+	// 		description: 'Fix critical bugs reported by the QA team.'
+	// 	},
+	// 	{
+	// 		id: "9",
+	// 		task: 'Performance Testing',
+	// 		time: 'Tue, Jun 18 2024 at 3:00 PM',
+	// 		status: 'Todo',
+	// 		description: 'Conduct performance testing on the new release and document the results.'
+	// 	},
+	// 	{
+	// 		id: "10",
+	// 		task: 'Code Deployment',
+	// 		time: 'Wed, Jun 19 2024 at 12:00 PM',
+	// 		status: 'Todo',
+	// 		description: 'Deploy the latest version of the code to the production environment.'
+	// 	},
+	// 	{
+	// 		id: "11",
+	// 		task: 'Submit Project Report',
+	// 		time: 'Mon, Jun 10 2024 at 9:00 AM',
+	// 		status: 'In Progress',
+	// 		description: 'Complete the final project report and submit it to the project manager.'
+	// 	},
+	// 	{
+	// 		id: "12",
+	// 		task: 'Team Meeting',
+	// 		time: 'Tue, Jun 11 2024 at 11:00 AM',
+	// 		status: 'Done',
+	// 		description: 'Discuss project milestones and next steps with the team.'
+	// 	},
+	// 	{
+	// 		id: "13",
+	// 		task: 'Code Review',
+	// 		time: 'Wed, Jun 12 2024 at 2:00 PM',
+	// 		status: 'Todo',
+	// 		description: 'Review the latest code commits and provide feedback to the developers.'
+	// 	},
+	// 	{
+	// 		id: "14",
+	// 		task: 'Client Presentation',
+	// 		time: 'Thu, Jun 13 2024 at 4:00 PM',
+	// 		status: 'In Progress',
+	// 		description: 'Prepare and present the project progress to the client.'
+	// 	},
+	// ])
 
-	const [tasks, settasks] = useState<Task[]>([
-		{
-			id: "1",
-			task: 'Submit Project Report',
-			time: 'Mon, Jun 10 2024 at 9:00 AM',
-			status: 'In Progress',
-			description: 'Complete the final project report and submit it to the project manager.'
-		},
-		{
-			id: "2",
-			task: 'Team Meeting',
-			time: 'Tue, Jun 11 2024 at 11:00 AM',
-			status: 'Done',
-			description: 'Discuss project milestones and next steps with the team.'
-		},
-		{
-			id: "3",
-			task: 'Code Review',
-			time: 'Wed, Jun 12 2024 at 2:00 PM',
-			status: 'Todo',
-			description: 'Review the latest code commits and provide feedback to the developers.'
-		},
-		{
-			id: "4",
-			task: 'Client Presentation',
-			time: 'Thu, Jun 13 2024 at 4:00 PM',
-			status: 'In Progress',
-			description: 'Prepare and present the project progress to the client.'
-		},
-		{
-			id: "5",
-			task: 'Design Mockups',
-			time: 'Fri, Jun 14 2024 at 1:00 PM',
-			status: 'Done',
-			description: 'Create design mockups for the new feature and share them with the team.'
-		},
-		{
-			id: "6",
-			task: 'Update Documentation',
-			time: 'Sat, Jun 15 2024 at 3:00 PM',
-			status: 'Todo',
-			description: 'Update the project documentation to reflect recent changes.'
-		},
-		{
-			id: "7",
-			task: 'Sprint Planningsss',
-			time: 'Sun, Jun 5 2024 at 10:00 AM',
-			status: 'In Progress',
-			description: 'Plan the tasks and goals for the upcoming sprint with the team.'
-		},
-		{
-			id: "8",
-			task: 'Bug Fixes',
-			time: 'Mon, Jun 17 2024 at 5:00 PM',
-			status: 'Done',
-			description: 'Fix critical bugs reported by the QA team.'
-		},
-		{
-			id: "9",
-			task: 'Performance Testing',
-			time: 'Tue, Jun 18 2024 at 3:00 PM',
-			status: 'Todo',
-			description: 'Conduct performance testing on the new release and document the results.'
-		},
-		{
-			id: "10",
-			task: 'Code Deployment',
-			time: 'Wed, Jun 19 2024 at 12:00 PM',
-			status: 'Todo',
-			description: 'Deploy the latest version of the code to the production environment.'
-		},
-		{
-			id: "11",
-			task: 'Submit Project Report',
-			time: 'Mon, Jun 10 2024 at 9:00 AM',
-			status: 'In Progress',
-			description: 'Complete the final project report and submit it to the project manager.'
-		},
-		{
-			id: "12",
-			task: 'Team Meeting',
-			time: 'Tue, Jun 11 2024 at 11:00 AM',
-			status: 'Done',
-			description: 'Discuss project milestones and next steps with the team.'
-		},
-		{
-			id: "13",
-			task: 'Code Review',
-			time: 'Wed, Jun 12 2024 at 2:00 PM',
-			status: 'Todo',
-			description: 'Review the latest code commits and provide feedback to the developers.'
-		},
-		{
-			id: "14",
-			task: 'Client Presentation',
-			time: 'Thu, Jun 13 2024 at 4:00 PM',
-			status: 'In Progress',
-			description: 'Prepare and present the project progress to the client.'
-		},
-	])
 	const [preparedTasks, setpreparedTasks] = useState<Task[] | null>(null)
 	useEffect(() => {
 		function sortTasks() {
@@ -190,9 +199,9 @@ function TodoList() {
 			}
 			const sortedTasks = [...tasks].sort((a, b): number => {
 				if (sortCriteria === 'date-asc') {
-					return parseDate(a.time).getTime() - parseDate(b.time).getTime();
+					return parseDate(a.due).getTime() - parseDate(b.due).getTime();
 				} else if (sortCriteria === 'date-desc') {
-					return parseDate(b.time).getTime() - parseDate(a.time).getTime();
+					return parseDate(b.due).getTime() - parseDate(a.due).getTime();
 				} else if (sortCriteria === 'alphabetic-asc') {
 					return a.task.localeCompare(b.task);
 				} else if (sortCriteria === 'alphabetic-desc') {
@@ -411,9 +420,9 @@ function TodoList() {
 											<AccordionItem value={"test"}>
 												<AccordionTrigger className="relative">
 													{
-														(parseDate(task.time) < new Date()) && <Badge className="absolute z-30 -top-2 -left-2 text-xs bg-red-500 text-white rounded-s-none opacity-85 shadow-md">Due!!!</Badge>
+														(parseDate(task.due) < new Date()) && <Badge className="absolute z-30 -top-2 -left-2 text-xs bg-red-500 text-white rounded-s-none opacity-85 shadow-md">Due!!!</Badge>
 													}
-													<Tasks task={task.task} time={task.time} status={task.status} id={task.id} desciption={task.description} onStatusChange={handleTaskStatusChange} />
+													<Tasks task={task.task} time={task.due} status={taskStatusMap[task.status]} id={task.id} desciption={task.description} onStatusChange={handleTaskStatusChange} />
 												</AccordionTrigger>
 												<AccordionContent className="px-1">
 													<div className="font-medium">
@@ -438,10 +447,9 @@ function TodoList() {
 
 				</div>
 			</div>
-
 		</div>
 
 	)
 }
 
-export default TodoList
+export default TaskList
