@@ -1,4 +1,4 @@
-import { ArrowDownUp, ArrowDownWideNarrow, ArrowDownZA, ArrowUpAZ, ArrowUpWideNarrow, Plus, Filter, Power } from "lucide-react"
+import { ArrowDownUp, ArrowDownWideNarrow, ArrowDownZA, ArrowUpAZ, ArrowUpWideNarrow, Plus, Filter } from "lucide-react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import Tasks from "./Tasks"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion"
@@ -19,7 +19,6 @@ import {
 	Drawer,
 	DrawerClose,
 	DrawerContent,
-	DrawerDescription,
 	DrawerFooter,
 	DrawerHeader,
 	DrawerTitle,
@@ -27,7 +26,6 @@ import {
 } from "@/components/ui/drawer"
 import { Button } from "./ui/button"
 import Setting from "./Setting"
-import loadInspirationalQuote from "@/utils/quoteLoadingUtil"
 import { Badge } from "./ui/badge"
 
 
