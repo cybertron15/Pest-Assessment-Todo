@@ -5,7 +5,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import "./index.css";
-import Tasks from "./routes/Tasks";
+import Tasks, { action as tasksAction,loader as taksLoader } from "./routes/Tasks";
 import Error from "./components/ErrorElement";
 import Login, { action as loginAction } from "./routes/Login";
 import ProtectedRoute from "./routes/ProtectedRoute";
@@ -19,14 +19,12 @@ const router = createBrowserRouter([
     errorElement: <Error />,
   },
   {
-    element: <ProtectedRoute />,
     errorElement: <Error />,
-    children: [
-      {
-        path: "/tasks",
-        element: <Tasks />
-      },
-    ]
+    path: "/tasks",
+    element: <Tasks />,
+    loader:taksLoader,
+    action: tasksAction
+
   },
 ]);
 
