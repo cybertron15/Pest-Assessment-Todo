@@ -5,11 +5,9 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import "./index.css";
-import Tasks, { action as tasksAction,loader as taksLoader } from "./routes/Tasks";
+import Tasks, { action as tasksAction,loader as taksLoader } from "./routes/Tasksit";
 import Error from "./components/ErrorElement";
-import Login, { action as loginAction } from "./routes/Login";
-import ProtectedRoute from "./routes/ProtectedRoute";
-import { AuthProvider } from "./context/AuthContext";
+import Login, { action as loginAction } from "./routes/Login"
 
 const router = createBrowserRouter([
   {
@@ -30,8 +28,6 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <AuthProvider>
       <RouterProvider router={router} />
-    </AuthProvider>
   </React.StrictMode>
 );
