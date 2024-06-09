@@ -39,3 +39,7 @@ class TaskRetriveUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         user = self.request.user
         return Tasks.objects.filter(owner=user)
+    
+    def perform_create(self, serializer):
+        user = self.request.user
+        serializer.save(owner=user)
