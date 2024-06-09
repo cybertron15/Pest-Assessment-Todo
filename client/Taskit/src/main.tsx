@@ -5,7 +5,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import "./index.css";
-import Todo from "./routes/Todo";
+import Tasks from "./routes/Tasks";
 import Error from "./components/ErrorElement";
 import Login, { action as loginAction } from "./routes/Login";
 import ProtectedRoute from "./routes/ProtectedRoute";
@@ -24,7 +24,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/tasks",
-        element: <Todo />
+        element: <Tasks />
       },
     ]
   },
