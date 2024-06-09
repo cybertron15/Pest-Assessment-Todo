@@ -8,6 +8,7 @@ from.models import Tasks
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from .serializers import PasswordVerificationSerializer
 
 # getting custom user model
 User = get_user_model()
@@ -43,3 +44,10 @@ class TaskRetriveUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
     def perform_create(self, serializer):
         user = self.request.user
         serializer.save(owner=user)
+
+class VerifyPasswordAndUpdateView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = PasswordVerificationSerializer
+
+    def get_object(self):
+        return self.request.user

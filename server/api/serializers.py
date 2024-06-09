@@ -5,6 +5,29 @@ from django.contrib.auth import get_user_model
 from .models import Tasks
 # getting custom user model
 User = get_user_model()
+from rest_framework import serializers
+
+class PasswordVerificationSerializer(serializers.Serializer):
+    current_password = serializers.CharField(write_only=True)
+    new_email = serializers.EmailField(required=False)
+    new_password = serializers.CharField(write_only=True, required=False)
+    new_full_name = serializers.CharField(write_only=True, required=False)
+
+    def validate_current_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError('Current password is incorrect.')
+        return value
+
+    def update(self, instance, validated_data):
+        if 'new_email' in validated_data:
+            instance.email = validated_data['new_email']
+        if 'new_password' in validated_data:
+            instance.set_password(validated_data['new_password'])
+        if 'new_full_name' in validated_data:
+            instance.set_password(validated_data['new_password'])
+        instance.save()
+        return instance
 
 class UserSerializer(serializers.ModelSerializer):
     re_password = serializers.CharField(write_only=True, required=True)
