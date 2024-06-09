@@ -38,7 +38,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = [
             'full_name','username','email','password','re_password'
         ]
-        
     
     def validate(self, data):
         # Call super to run default validations
@@ -78,3 +77,8 @@ class TaskSerializers(serializers.ModelSerializer):
             "description",
             "due"
         ]
+
+class SimpleUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'email']
