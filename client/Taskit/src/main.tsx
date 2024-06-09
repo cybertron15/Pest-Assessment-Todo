@@ -5,7 +5,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import "./index.css";
-import Tasks, { action as tasksAction,loader as taksLoader } from "./routes/Tasksit";
+import Taskit, { action as tasksAction, loader as taksLoader } from "./routes/Tasksit";
 import Error from "./components/ErrorElement";
 import Login, { action as loginAction } from "./routes/Login"
 
@@ -19,8 +19,8 @@ const router = createBrowserRouter([
   {
     errorElement: <Error />,
     path: "/tasks",
-    element: <Tasks />,
-    loader:taksLoader,
+    element: <Taskit />,
+    loader: taksLoader,
     action: tasksAction
 
   },
@@ -28,6 +28,6 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-      <RouterProvider router={router} />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );

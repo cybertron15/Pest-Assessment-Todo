@@ -10,7 +10,7 @@ import {
 	DropdownMenuShortcut
 } from "@/components/ui/dropdown-menu"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
 import { Input } from "./ui/input"
 import parseDate from "@/utils/dateParseUtil"
@@ -27,7 +27,8 @@ import {
 import { Button } from "./ui/button"
 import Setting from "./Setting"
 import { Badge } from "./ui/badge"
-import { useLoaderData } from "react-router-dom"
+import { Form, useActionData, useLoaderData, useNavigate, useNavigation } from "react-router-dom"
+import { ScaleLoader } from "react-spinners"
 
 
 type Task = {
@@ -39,7 +40,7 @@ type Task = {
 
 }
 type Checked = DropdownMenuCheckboxItemProps["checked"]
-type TaskStatusMap = {[key:string]:string}
+type TaskStatusMap = { [key: string]: string }
 function TaskList() {
 	const [filter, setfilter] = useState<string | null>(null)
 	const [filterAll, setfilterAll] = useState<Checked>(true)
@@ -55,116 +56,25 @@ function TaskList() {
 
 	const [search, setSearch] = useState<string | null>(null)
 	// const [quote, setquote] = useState({quote:"", author:""})
-	const [tasks, settasks] = useState<Task[]>(useLoaderData() as Task[])
-	console.log(tasks);
-	const taskStatusMap : TaskStatusMap = {
-		"1":"Todo",
-		"2":"In Progress",
-		"3":"Done"
-	}
-	
-	// const [tasks, settasks] = useState<Task[]>([
-	// 	{
-	// 		id: "1",
-	// 		task: 'Submit Project Report',
-	// 		time: 'Mon, Jun 10 2024 at 9:00 AM',
-	// 		status: 'In Progress',
-	// 		description: 'Complete the final project report and submit it to the project manager.'
-	// 	},
-	// 	{
-	// 		id: "2",
-	// 		task: 'Team Meeting',
-	// 		time: 'Tue, Jun 11 2024 at 11:00 AM',
-	// 		status: 'Done',
-	// 		description: 'Discuss project milestones and next steps with the team.'
-	// 	},
-	// 	{
-	// 		id: "3",
-	// 		task: 'Code Review',
-	// 		time: 'Wed, Jun 12 2024 at 2:00 PM',
-	// 		status: 'Todo',
-	// 		description: 'Review the latest code commits and provide feedback to the developers.'
-	// 	},
-	// 	{
-	// 		id: "4",
-	// 		task: 'Client Presentation',
-	// 		time: 'Thu, Jun 13 2024 at 4:00 PM',
-	// 		status: 'In Progress',
-	// 		description: 'Prepare and present the project progress to the client.'
-	// 	},
-	// 	{
-	// 		id: "5",
-	// 		task: 'Design Mockups',
-	// 		time: 'Fri, Jun 14 2024 at 1:00 PM',
-	// 		status: 'Done',
-	// 		description: 'Create design mockups for the new feature and share them with the team.'
-	// 	},
-	// 	{
-	// 		id: "6",
-	// 		task: 'Update Documentation',
-	// 		time: 'Sat, Jun 15 2024 at 3:00 PM',
-	// 		status: 'Todo',
-	// 		description: 'Update the project documentation to reflect recent changes.'
-	// 	},
-	// 	{
-	// 		id: "7",
-	// 		task: 'Sprint Planningsss',
-	// 		time: 'Sun, Jun 5 2024 at 10:00 AM',
-	// 		status: 'In Progress',
-	// 		description: 'Plan the tasks and goals for the upcoming sprint with the team.'
-	// 	},
-	// 	{
-	// 		id: "8",
-	// 		task: 'Bug Fixes',
-	// 		time: 'Mon, Jun 17 2024 at 5:00 PM',
-	// 		status: 'Done',
-	// 		description: 'Fix critical bugs reported by the QA team.'
-	// 	},
-	// 	{
-	// 		id: "9",
-	// 		task: 'Performance Testing',
-	// 		time: 'Tue, Jun 18 2024 at 3:00 PM',
-	// 		status: 'Todo',
-	// 		description: 'Conduct performance testing on the new release and document the results.'
-	// 	},
-	// 	{
-	// 		id: "10",
-	// 		task: 'Code Deployment',
-	// 		time: 'Wed, Jun 19 2024 at 12:00 PM',
-	// 		status: 'Todo',
-	// 		description: 'Deploy the latest version of the code to the production environment.'
-	// 	},
-	// 	{
-	// 		id: "11",
-	// 		task: 'Submit Project Report',
-	// 		time: 'Mon, Jun 10 2024 at 9:00 AM',
-	// 		status: 'In Progress',
-	// 		description: 'Complete the final project report and submit it to the project manager.'
-	// 	},
-	// 	{
-	// 		id: "12",
-	// 		task: 'Team Meeting',
-	// 		time: 'Tue, Jun 11 2024 at 11:00 AM',
-	// 		status: 'Done',
-	// 		description: 'Discuss project milestones and next steps with the team.'
-	// 	},
-	// 	{
-	// 		id: "13",
-	// 		task: 'Code Review',
-	// 		time: 'Wed, Jun 12 2024 at 2:00 PM',
-	// 		status: 'Todo',
-	// 		description: 'Review the latest code commits and provide feedback to the developers.'
-	// 	},
-	// 	{
-	// 		id: "14",
-	// 		task: 'Client Presentation',
-	// 		time: 'Thu, Jun 13 2024 at 4:00 PM',
-	// 		status: 'In Progress',
-	// 		description: 'Prepare and present the project progress to the client.'
-	// 	},
-	// ])
 
+	const [tasks, settasks] = useState<Task[] | null>(useLoaderData() as Task[])
 	const [preparedTasks, setpreparedTasks] = useState<Task[] | null>(null)
+
+	const data: Task[] = useLoaderData() as Task[]
+
+	useEffect(() => {
+		if (data) {
+			settasks(data)
+		}
+	}, [data])
+
+	const taskStatusMap: TaskStatusMap = {
+		"1": "Todo",
+		"2": "In Progress",
+		"3": "Done"
+	}
+
+
 	useEffect(() => {
 		function sortTasks() {
 			// setting sort states on dropdown
@@ -197,19 +107,22 @@ function TaskList() {
 					break;
 
 			}
-			const sortedTasks = [...tasks].sort((a, b): number => {
-				if (sortCriteria === 'date-asc') {
-					return parseDate(a.due).getTime() - parseDate(b.due).getTime();
-				} else if (sortCriteria === 'date-desc') {
-					return parseDate(b.due).getTime() - parseDate(a.due).getTime();
-				} else if (sortCriteria === 'alphabetic-asc') {
-					return a.task.localeCompare(b.task);
-				} else if (sortCriteria === 'alphabetic-desc') {
-					return b.task.localeCompare(a.task);
-				}
-				return 0;
-			});
-			settasks(sortedTasks);
+			if (tasks) {
+				const sortedTasks = [...tasks].sort((a, b): number => {
+					if (sortCriteria === 'date-asc') {
+						return parseDate(a.due).getTime() - parseDate(b.due).getTime();
+					} else if (sortCriteria === 'date-desc') {
+						return parseDate(b.due).getTime() - parseDate(a.due).getTime();
+					} else if (sortCriteria === 'alphabetic-asc') {
+						return a.task.localeCompare(b.task);
+					} else if (sortCriteria === 'alphabetic-desc') {
+						return b.task.localeCompare(a.task);
+					}
+					return 0;
+				});
+				settasks(sortedTasks);
+			}
+
 		};
 		sortTasks()
 	}, [sortCriteria])
@@ -248,8 +161,8 @@ function TaskList() {
 					break;
 			}
 			if (filter !== null) {
-				const preparedTasks = tasks.filter(item => item.status.toLowerCase() === filter.toLowerCase());
-				setpreparedTasks(preparedTasks)
+				const preparedTasks = tasks?.filter(item => taskStatusMap[item.status].toLowerCase() === filter.toLowerCase());
+				if (preparedTasks) { setpreparedTasks(preparedTasks) }
 				return preparedTasks
 			}
 			else {
@@ -263,11 +176,14 @@ function TaskList() {
 
 			const preparedTasks = filterTasks()
 			if (search !== null) {
-				const updatedTasks = preparedTasks.filter(item => item.task.toLowerCase().includes(search.toLocaleLowerCase()));
-				setpreparedTasks(updatedTasks)
+				const updatedTasks = preparedTasks?.filter(item => item.task.toLowerCase().includes(search.toLocaleLowerCase()));
+				if (updatedTasks)
+					setpreparedTasks(updatedTasks)
 			}
 			if (search === null || search === "") {
-				setpreparedTasks(preparedTasks)
+				if (preparedTasks) {
+					setpreparedTasks(preparedTasks)
+				}
 			}
 		}
 		filterTasks()
@@ -277,17 +193,30 @@ function TaskList() {
 
 	// handles and updates tasks status change
 	const handleTaskStatusChange = (id: string, status: string) => {
-		const updatedTasks = tasks.map((task) => {
+		const updatedTasks = tasks?.map((task) => {
 			return task.id === id ?
 				{ ...task, status: status } : task
 		})
-		settasks(updatedTasks)
+		if (updatedTasks) {
+			settasks(updatedTasks)
+		}
 	}
+	const drawerRef = useRef<HTMLButtonElement>(null);
+	const actionData = useActionData()
+	const navigation = useNavigation()
 
-
+	if (actionData === "success") {
+		drawerRef.current?.click()
+	}
 	return (
 		<div className="h-full w-full bg-white lg:rounded-lg flex shadow-xl">
-			<div className="lg:flex flex-col basis-1/2 bg-green-700 lg:rounded-s-lg px-4 py-2 h-full hidden">
+			<div className="relative lg:flex flex-col basis-1/2 bg-green-700 lg:rounded-s-lg px-4 py-2 h-full hidden">
+				{
+					navigation.state !== "idle" &&
+					<div className='absolute top-0 left-0 rounded-lg h-full w-full bg-black opacity-70 flex items-center justify-center'>
+						<ScaleLoader color="white" />
+					</div>
+				}
 				<div className="flex justify-between items-center">
 					<div className="text-white text-4xl">
 						Taskit
@@ -295,6 +224,7 @@ function TaskList() {
 					<Setting />
 				</div>
 				<div className="flex flex-col h-full mt-[35%] items-center">
+
 					{/* <div className="text-white text-lg mt-[10%]">
 						Hey Palash! You have {tasks.filter(task => task.status !== "Done").length} tasks to conquer.
 					</div> */}
@@ -302,16 +232,15 @@ function TaskList() {
 						<h2 className="text-white text-2xl mb-2">
 							Create Tasks
 						</h2>
-						<form className="flex flex-col gap-2 w-72">
-							<input type="text" placeholder="Task" className="bg-none rounded-lg text-lg px-2 py-1 text-gray-400" required />
-							<input type="text" placeholder="Description" className="bg-none rounded-lg text-lg px-2 py-1 text-gray-400" required />
-							<input type="datetime-local" placeholder="" className="bg-none rounded-lg text-lg px-2 py-1 text-gray-400" required />
-							<input type="submit" value="Add Task" className="bg-green-600 rounded-lg text-lg px-2 py-1 text-white cursor-pointer" required />
-						</form>
+						<Form className="flex flex-col gap-2 w-72" method="post">
+							<input type="hidden" name="formType" value="create" />
+							<input type="text" placeholder="Task" name="task" className="bg-none rounded-lg text-lg px-2 py-1 text-gray-400" required />
+							<input type="text" placeholder="Description" name="description" className="bg-none rounded-lg text-lg px-2 py-1 text-gray-400" required />
+							<input type="datetime-local" placeholder="" name="due" className="bg-none rounded-lg text-lg px-2 py-1 text-gray-400" required />
+							<input type="submit" value="Add Task" disabled={navigation.state !== "idle"} className="bg-green-600 rounded-lg text-lg px-2 py-1 text-white cursor-pointer" />
+						</Form>
 					</div>
-					{
 
-					}
 				</div>
 			</div>
 			<div className="relative flex-1 ">
@@ -328,6 +257,12 @@ function TaskList() {
 								<Drawer>
 									<DrawerTrigger className="bg-green-600 rounded-md mt-1 shadow-xl p-1"><Plus className="text-white" size={22} /></DrawerTrigger>
 									<DrawerContent className="bg-green-700 flex flex-col items-center border-none">
+										{
+											navigation.state !== "idle" &&
+											<div className='absolute top-0 left-0 rounded-lg h-full w-full bg-black opacity-70 flex items-center justify-center'>
+												<ScaleLoader color="white" />
+											</div>
+										}
 										<DrawerHeader>
 											<DrawerTitle>
 												<h2 className="text-white text-2xl mb-2">
@@ -335,17 +270,18 @@ function TaskList() {
 												</h2>
 											</DrawerTitle>
 										</DrawerHeader>
-										<form className="flex flex-col gap-2 w-72">
-											<input type="text" placeholder="Task" className="bg-none rounded-lg text-lg px-2 py-1 text-gray-400" required />
-											<input type="text" placeholder="Description" className="bg-none rounded-lg text-lg px-2 py-1 text-gray-400" required />
-											<input type="datetime-local" className="w-full bg-none rounded-lg text-lg px-2 py-1 text-gray-400" required />
+										<Form className="flex flex-col gap-2 w-72" method="post">
+											<input type="hidden" name="formType" value="create" />
+											<input type="text" placeholder="Task" name="task" className="bg-none rounded-lg text-lg px-2 py-1 text-gray-400" required />
+											<input type="text" placeholder="Description" name="description" className="bg-none rounded-lg text-lg px-2 py-1 text-gray-400" required />
+											<input type="datetime-local" name="due" className="w-full bg-none rounded-lg text-lg px-2 py-1 text-gray-400" required />
 											<DrawerFooter className="px-0">
-												<input type="submit" value="Add Task" className="bg-green-600 rounded-lg text-lg py-1 text-white cursor-pointer" required />
-												<DrawerClose>
+												<input type="submit" disabled={navigation.state !== "idle"} value="Add Task" className="bg-green-600 rounded-lg text-lg py-1 text-white cursor-pointer" required />
+												<DrawerClose ref={drawerRef}>
 													<Button className="bg-green-700 w-full border-2 border-green-600">Cancel</Button>
 												</DrawerClose>
 											</DrawerFooter>
-										</form>
+										</Form>
 									</DrawerContent>
 								</Drawer>
 								<div className="mt-[2px]">
@@ -439,12 +375,11 @@ function TaskList() {
 										</Accordion>
 									}))
 								:
-								<div>
-									spinner
+								<div className="h-full fl mt-[20%] flex justify-center">
+									<ScaleLoader color="green" />
 								</div>
 						}
 					</ScrollArea>
-
 				</div>
 			</div>
 		</div>

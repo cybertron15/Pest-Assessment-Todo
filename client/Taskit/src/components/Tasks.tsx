@@ -16,8 +16,9 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 
-import parseDate from "@/utils/dateParseUtil";
+import { formatDate } from "@/utils/dateParseUtil";
 import Edit from "./Edit";
+import titleCase from "@/utils/titleCaseUtil";
 
 type Props = {
     id: string;
@@ -71,15 +72,15 @@ function Tasks({
                     <Tooltip>
                         <div className=" flex items-center gap-1.5">
                             <TooltipTrigger className="text-lg md:text-xl font-Inter truncate ... max-w-36 md:max-w-48 text-start">
-                                {task}
+                                {titleCase(task)}
                             </TooltipTrigger>
-                           <Edit task={task} desciption={desciption} time={time} />
+                           <Edit id={id} task={task} desciption={desciption} time={time} />
                         </div>
                         <TooltipContent className="bg-slate-600">{task}</TooltipContent>
                     </Tooltip>
                 </TooltipProvider>
                 <div className="text-xs text-slate-400 text-start">
-                    {time}
+                    {formatDate(time)}
                 </div>
             </div>
             <DropdownMenu>
