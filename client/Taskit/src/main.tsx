@@ -7,17 +7,19 @@ import {
 import "./index.css";
 import Todo from "./routes/Todo";
 import Error from "./components/ErrorElement";
-import Login from "./routes/Login";
+import Login, { action as loginAction } from "./routes/Login";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext";
 
 const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+    action: loginAction,
     errorElement: <Error />,
   },
   {
-    element: <ProtectedRoute isAuthenticated={false} />,
+    element: <ProtectedRoute />,
     errorElement: <Error />,
     children: [
       {
@@ -30,6 +32,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );
