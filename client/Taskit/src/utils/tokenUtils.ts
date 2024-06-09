@@ -1,10 +1,10 @@
 import {jwtDecode} from 'jwt-decode';
 
-const ACCESS_TOKEN_KEY = 'access_token';
-const REFRESH_TOKEN_KEY = 'refresh_token';
+const ACCESS_TOKEN_KEY = 'accessToken';
+const REFRESH_TOKEN_KEY = 'refreshToken';
 
-export const setAccessToken = (token: string): void => {
-  localStorage.setItem(ACCESS_TOKEN_KEY, token);
+export const setAccessToken = async (token: string) => {
+  await localStorage.setItem(ACCESS_TOKEN_KEY, token);
 };
 
 export const getAccessToken = (): string | null => {
@@ -22,6 +22,8 @@ export const getRefreshToken = (): string | null => {
 export const removeTokens = (): void => {
   localStorage.removeItem(ACCESS_TOKEN_KEY);
   localStorage.removeItem(REFRESH_TOKEN_KEY);
+  console.log('remvoed tokenS',ACCESS_TOKEN_KEY,REFRESH_TOKEN_KEY);
+  
 };
 
 type JwtPayload = {
