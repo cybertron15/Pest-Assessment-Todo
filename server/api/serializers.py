@@ -20,15 +20,15 @@ class UserSerializer(serializers.ModelSerializer):
     def validate(self, data):
         # Call super to run default validations
         data = super().validate(data)
-
-        # Validate password using Django's built-in password validators
         password = data.get('password')
-        if password:
-            validate_password(password)
 
         # Check if the password and re-entered password match
         if password != data.get('re_password'):
             raise serializers.ValidationError("The passwords do not match.")
+
+        # Validate password using Django's built-in password validators
+        if password:
+            validate_password(password)
 
         # Pop out the re-entered password before returning the validated data
         data.pop('re_password')
