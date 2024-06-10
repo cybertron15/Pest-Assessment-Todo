@@ -48,7 +48,7 @@ function TaskList() {
 	const [filterTodo, setfilterTodo] = useState<Checked>(false)
 	const [filterDone, setfilterDone] = useState<Checked>(false)
 
-	const [sortCriteria, setsortCriteria] = useState<string>("date-desc")
+	const [sortCriteria, setsortCriteria] = useState<string>("date-asc")
 	const [alphaAsc, setalphaAsc] = useState(true)
 	const [alphaDesc, setalphaDesc] = useState(false)
 	const [dateAsc, setdateAsc] = useState(false)
@@ -77,53 +77,29 @@ function TaskList() {
 
 	useEffect(() => {
 		function sortTasks() {
-			// setting sort states on dropdown
-			switch (sortCriteria) {
-				case "alphabetic-asc":
-					setalphaAsc(true)
-					setalphaDesc(false)
-					setdateAsc(false)
-					setdateDesc(false)
-					break;
-
-				case "alphabetic-desc":
-					setalphaAsc(false)
-					setalphaDesc(true)
-					setdateAsc(false)
-					setdateDesc(false)
-					break;
-
-				case "date-asc":
-					setalphaAsc(false)
-					setalphaDesc(false)
-					setdateAsc(true)
-					setdateDesc(false)
-					break;
-				case "date-desc":
-					setalphaAsc(false)
-					setalphaDesc(false)
-					setdateAsc(false)
-					setdateDesc(true)
-					break;
-
-			}
-			if (tasks) {
-				const sortedTasks = [...tasks].sort((a, b): number => {
-					if (sortCriteria === 'date-asc') {
-						return parseDate(a.due).getTime() - parseDate(b.due).getTime();
-					} else if (sortCriteria === 'date-desc') {
-						return parseDate(b.due).getTime() - parseDate(a.due).getTime();
-					} else if (sortCriteria === 'alphabetic-asc') {
-						return a.task.localeCompare(b.task);
-					} else if (sortCriteria === 'alphabetic-desc') {
-						return b.task.localeCompare(a.task);
-					}
-					return 0;
-				});
+			// Sorting function
+			const sortingFunctions = {
+				'alphabetic-asc': (a, b) => a.task.localeCompare(b.task),
+				'alphabetic-desc': (a, b) => b.task.localeCompare(a.task),
+				'date-asc': (a, b) => new Date(a.due) - new Date(b.due),
+				'date-desc': (a, b) => new Date(b.due) - new Date(a.due)
+			};
+		
+			// Get the sorting function based on sortCriteria
+			const sortingFunction = sortingFunctions[sortCriteria];
+		
+			if (tasks && sortingFunction) {
+				// Set sort states based on sortCriteria
+				setalphaAsc(sortCriteria === 'alphabetic-asc');
+				setalphaDesc(sortCriteria === 'alphabetic-desc');
+				setdateAsc(sortCriteria === 'date-asc');
+				setdateDesc(sortCriteria === 'date-desc');
+		
+				// Sort tasks
+				const sortedTasks = [...tasks].sort(sortingFunction);
 				settasks(sortedTasks);
 			}
-
-		};
+		}
 		sortTasks()
 	}, [sortCriteria])
 

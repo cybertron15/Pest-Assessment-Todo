@@ -31,6 +31,7 @@ export async function action({ params, request }: { params: any, request: Reques
 	const new_password = formData.get("new_password");
 	const current_password = formData.get("current_password");
 	console.log(formType);
+	console.log(due);
 	
 	if (formType === "logout") {
 		removeTokens();
@@ -129,6 +130,8 @@ export async function loader() {
 	if (token === null) { return redirect('/login') }
 	try {
 		const response = await axiosInstance.get('/tasks/');
+		console.log(response.data);
+		
 		return response.data
 	} catch (error) {
 		toast('Error fetching data')
