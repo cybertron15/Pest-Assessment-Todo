@@ -99,6 +99,13 @@ class TaskSerializers(serializers.ModelSerializer):
             "due"
         ]
 
+class TaskStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tasks
+        fields = [
+            "status",
+        ]
+        
 class SimpleUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

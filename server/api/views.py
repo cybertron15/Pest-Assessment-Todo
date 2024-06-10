@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import UserSerializer, TaskSerializers, SimpleUserSerializer
+from .serializers import UserSerializer, TaskSerializers, SimpleUserSerializer, TaskStatusSerializer
 from.models import Tasks
 
 from rest_framework.permissions import IsAuthenticated
@@ -42,6 +42,20 @@ class TaskListCreate(generics.ListCreateAPIView):
     
 class TaskRetriveUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TaskSerializers
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication,SessionAuthentication]
+    queryset = Tasks.objects.all()
+
+    def get_queryset(self):
+        user = self.request.user
+        return Tasks.objects.filter(owner=user)
+    
+    def perform_create(self, serializer):
+        user = self.request.user
+        serializer.save(owner=user)
+
+class TaskStatusUpdate(generics.UpdateAPIView):
+    serializer_class = TaskStatusSerializer
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication,SessionAuthentication]
     queryset = Tasks.objects.all()
