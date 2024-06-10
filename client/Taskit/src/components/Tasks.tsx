@@ -19,6 +19,8 @@ import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import { formatDate } from "@/utils/dateParseUtil";
 import Edit from "./Edit";
 import titleCase from "@/utils/titleCaseUtil";
+import axiosInstance from "@/utils/axiosInstance";
+import { toast } from "sonner";
 
 type Props = {
     id: string;
@@ -42,6 +44,20 @@ function Tasks({
     const [InProgress, setInProgress] = useState<Checked>(false)
     const [Done, setDone] = useState<Checked>(false)
     const [Taskstatus, setTaskstatus] = useState(status)
+
+
+
+    async function updateStatus(taskStatus: string) {
+            const status = taskStatus
+            try {
+                await axiosInstance.put(`/taskstatus/${id}`, {status});
+                toast(`Status for ${task} updated`)
+    
+            } catch (error) {
+                toast(`Failed to update status for ${task}`)
+                console.error('Error Editing Task', error);
+            }
+        }
 
     useEffect(() => {
         switch (Taskstatus) {
@@ -74,7 +90,7 @@ function Tasks({
                             <TooltipTrigger className="text-lg md:text-xl font-Inter truncate ... max-w-36 md:max-w-48 text-start">
                                 {titleCase(task)}
                             </TooltipTrigger>
-                           <Edit id={id} task={task} desciption={desciption} time={time} />
+                            <Edit id={id} task={task} desciption={desciption} time={time} />
                         </div>
                         <TooltipContent className="bg-slate-600">{task}</TooltipContent>
                     </Tooltip>
@@ -93,16 +109,19 @@ function Tasks({
                     <DropdownMenuCheckboxItem checked={Todo} onClick={(event) => {
                         onStatusChange(id, "1")
                         setTaskstatus("Todo")
+                        updateStatus("1")
                         event.stopPropagation() // stopping event propagation to prevent accordion trigger
                     }}>Todo</DropdownMenuCheckboxItem>
                     <DropdownMenuCheckboxItem checked={InProgress} onClick={(event) => {
                         onStatusChange(id, "2")
                         setTaskstatus("In Progress")
+                        updateStatus("2")
                         event.stopPropagation()
                     }}>In Progress</DropdownMenuCheckboxItem>
                     <DropdownMenuCheckboxItem checked={Done} onClick={(event) => {
                         onStatusChange(id, "3")
                         setTaskstatus("Done")
+                        updateStatus("3")
                         event.stopPropagation()
                     }}>Done</DropdownMenuCheckboxItem>
                 </DropdownMenuContent>

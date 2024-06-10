@@ -48,7 +48,7 @@ function TaskList() {
 	const [filterTodo, setfilterTodo] = useState<Checked>(false)
 	const [filterDone, setfilterDone] = useState<Checked>(false)
 
-	const [sortCriteria, setsortCriteria] = useState<string>("alphabetic-asc")
+	const [sortCriteria, setsortCriteria] = useState<string>("date-desc")
 	const [alphaAsc, setalphaAsc] = useState(true)
 	const [alphaDesc, setalphaDesc] = useState(false)
 	const [dateAsc, setdateAsc] = useState(false)
@@ -351,12 +351,12 @@ function TaskList() {
 									<div className="pt-20 text-lg text-center text-slate-500">
 										No tasks
 									</div> :
-									(preparedTasks.map((task) => {
-										return <Accordion type="single" key={task.id} collapsible className="border-b-2 px-2 mb-2">
+									(preparedTasks.map((task,index) => {
+										return <Accordion type="single" key={task.id+index} collapsible className="border-b-2 px-2 mb-2">
 											<AccordionItem value={"test"}>
 												<AccordionTrigger className="relative">
 													{
-														(parseDate(task.due) < new Date()) && <Badge className="absolute z-30 -top-2 -left-2 text-xs bg-red-500 text-white rounded-s-none opacity-85 shadow-md">Due!!!</Badge>
+														(parseDate(task.due) < new Date() && taskStatusMap[task.status]!=="Done") && <Badge key={task.id} className="absolute z-30 -top-2 -left-2 text-xs bg-red-500 text-white rounded-s-none opacity-85 shadow-md">Due!!!</Badge>
 													}
 													<Tasks task={task.task} time={task.due} status={taskStatusMap[task.status]} id={task.id} desciption={task.description} onStatusChange={handleTaskStatusChange} />
 												</AccordionTrigger>
