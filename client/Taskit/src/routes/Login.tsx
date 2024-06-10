@@ -34,17 +34,17 @@ function Login() {
 
 	// State for login form
 	const [loginForm, setLoginForm] = useState({
-		loginEmail: "palashdhavle15@gmail.com",
-		loginPassword: "tron@123",
+		loginEmail: "",
+		loginPassword: "",
 	});
 
 	// State for signup form
 	const [signupForm, setSignupForm] = useState({
-		signupFullName: "Palash Dhavle",
-		signupUsername: "palashdhavle15",
-		signupEmail: "palashdhavle15@gmail.com",
-		signupPassword: "123",
-		signupRePassword: "1233",
+		signupFullName: "",
+		signupUsername: "",
+		signupEmail: "",
+		signupPassword: "",
+		signupRePassword: "",
 	});
 
 	const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
