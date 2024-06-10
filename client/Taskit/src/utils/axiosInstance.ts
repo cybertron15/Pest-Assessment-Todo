@@ -1,8 +1,9 @@
 import axios, { AxiosResponse, InternalAxiosRequestConfig, AxiosHeaders } from 'axios';
 import { getAccessToken, setAccessToken, getRefreshToken, removeTokens, isTokenExpired } from './tokenUtils';
+const BACKEND_API = import.meta.env.VITE_BACKEND_API_URL;
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8000/',  // Replace with your backend API base URL
+  baseURL: BACKEND_API,  // Replace with your backend API base URL
   headers: {
     'Content-Type': 'application/json',
   },
@@ -14,7 +15,7 @@ axiosInstance.interceptors.request.use(
 
     if (token && isTokenExpired(token)) {
       try {
-        const response: AxiosResponse<{ access: string }> = await axios.post('http://localhost:8000/token/refresh/', {
+        const response: AxiosResponse<{ access: string }> = await axios.post(`${BACKEND_API}/token/refresh/`, {
           refresh: getRefreshToken(),
         });
         const newAccessToken = response.data.access;

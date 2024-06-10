@@ -2,12 +2,13 @@ import axios from 'axios';
 
 export default async function axiosAuth(formData: FormData){
 	const formType = formData.get("formType");
+	const BACKEND_API = import.meta.env.VITE_BACKEND_API_URL;
     try {
 		if (formType === "login") {
 			const email = formData.get("loginEmail");
 			const password = formData.get("loginPassword");
 			// Handle login form submission
-			const response = await axios.post('http://localhost:8000/token/', { email, password });
+			const response = await axios.post(`${BACKEND_API}/token/`, { email, password });
 			localStorage.setItem('accessToken', response.data.access);
 			localStorage.setItem('refreshToken', response.data.refresh);
 			return {
@@ -20,9 +21,9 @@ export default async function axiosAuth(formData: FormData){
 			const password = formData.get("signupPassword");
 			const re_password = formData.get("signupRePassword");
 			// Handle signup form submission
-			await axios.post('http://localhost:8000/signup/', { full_name, username, email, password, re_password });
+			await axios.post(`${BACKEND_API}/signup/`, { full_name, username, email, password, re_password });
 			// After successful signup, log in to get tokens
-			const response = await axios.post('http://localhost:8000/token/', { email, password });
+			const response = await axios.post(`${BACKEND_API}/token/`, { email, password });
 			localStorage.setItem('accessToken', response.data.access);
 			localStorage.setItem('refreshToken', response.data.refresh);
 			return {
