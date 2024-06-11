@@ -11,19 +11,21 @@ import Login, { action as loginAction } from "./routes/Login"
 
 const router = createBrowserRouter([
   {
-    path: "/login",
-    element: <Login />,
-    action: loginAction,
-    errorElement: <Error />,
+    errorElement:<Error />,
+    children:[{
+      path: "/login",
+      element: <Login />,
+      action: loginAction,
+    },
+    {
+      path: "/tasks",
+      element: <Taskit />,
+      loader: taksLoader,
+      action: tasksAction
+  
+    },]
   },
-  {
-    errorElement: <Error />,
-    path: "/tasks",
-    element: <Taskit />,
-    loader: taksLoader,
-    action: tasksAction
-
-  },
+  
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
