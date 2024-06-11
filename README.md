@@ -106,7 +106,7 @@ Follow these instructions to set up the project on your local system.
    npm run dev
    ```
 
-The React application should now be running at `http://localhost:5173`.
+The React application should now be running at `http://localhost:5173/login`.
 
 ## Environment Variables
 
